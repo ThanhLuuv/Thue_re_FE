@@ -6,6 +6,7 @@ import apiService from '../../services/apiService';
 import tokenService from '../../services/tokenService';
 import { useErrorHandler } from '../../services/errorService';
 import './Login.css';
+import { useAuth } from '../../contexts/AuthContext';
 
 const Login = () => {
   const navigate = useNavigate();
@@ -20,6 +21,8 @@ const Login = () => {
   useEffect(() => {
     tokenService.removeToken();
   }, []); 
+
+  const { login } = useAuth();
 
   const validateEmail = (email) => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -61,20 +64,23 @@ const Login = () => {
 
     setIsLoading(true);
     try {
-      const result = await apiService.login(formData);
-
-      if (result?.success && result?.data?.token) {
-        setErrors({});
-        tokenService.setToken(result.data.token, result.data.user.name);
-        console.log('User roles:', result.data.user.roles[0]);
-        const role = result.data.user.roles[0]? result.data.user.roles[0].toLowerCase() : 'user';
-        navigate(role === 'admin' ? '/admin' : '/');
+      const result = await login(formData);
+      if (result.message === "Invalid credentials") {
+        setErrors({ form: 'Email hoặc mật khẩu không chính xác' });
       } else {
-        const errorMessage = handleApiError(result);
-        const errorText = typeof errorMessage === 'object' 
-          ? (errorMessage.message || errorMessage.details || 'Đã xảy ra lỗi')
-          : errorMessage;
-        setErrors({ form: errorText });
+        if (result?.success && result?.data?.token) {
+          setErrors({});
+          tokenService.setToken(result.data.token, result.data.user.name);
+          console.log('User roles:', result.data.user.roles[0]);
+          const role = result.data.user.roles[0]? result.data.user.roles[0].toLowerCase() : 'user';
+          navigate(role === 'admin' ? '/admin' : '/');
+        } else {
+          const errorMessage = handleApiError(result);
+          const errorText = typeof errorMessage === 'object' 
+            ? (errorMessage.message || errorMessage.details || 'Đã xảy ra lỗi')
+            : errorMessage;
+          setErrors({ form: errorText });
+        }
       }
     } catch (error) {
       const errorMessage = handleApiError(error);
@@ -82,6 +88,7 @@ const Login = () => {
         ? (errorMessage.message || errorMessage.details || 'Đã xảy ra lỗi')
         : errorMessage;
       setErrors({ form: errorText });
+    
     } finally {
       setIsLoading(false);
     }

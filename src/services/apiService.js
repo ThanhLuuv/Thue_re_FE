@@ -80,7 +80,14 @@ const apiService = {
   // Get items by account
   getItemsByAccount: async () => {
     try {
-      return await axiosInstance.get('/item/account');
+      const token = localStorage.getItem('token');
+      return await axiosInstance.get('/item/get-by-account',
+        {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        }
+      );
     } catch (error) {
       console.error('Error fetching account items:', error);
       throw error;
@@ -98,9 +105,16 @@ const apiService = {
   },
 
   // Update item
-  updateItem: async (itemId, itemData, availability = [], images = [], locations = []) => {
+  updateItem: async (itemId, data) => {
     try {
-      return await axiosInstance.put(`/item/${itemId}`, { itemData, availability, images, locations });
+      const token = localStorage.getItem('token');
+      return await axiosInstance.put(`/item/${itemId}`, data,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        }
+      );
     } catch (error) {
       console.error('Error updating item:', error);
       throw error;
@@ -153,7 +167,14 @@ const apiService = {
   // Delete item
   deleteItem: async (itemId) => {
     try {
-      return await axiosInstance.delete(`/item/${itemId}`);
+      const token = localStorage.getItem('token');
+      return await axiosInstance.delete(`/item/${itemId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        }
+      );
     } catch (error) {
       console.error('Error deleting item:', error);
       throw error;
@@ -234,7 +255,35 @@ const apiService = {
         data: []
       };
     }
-  }
+  },
+  getCurrentUser: async () => {
+    try {
+      const token = localStorage.getItem('token');
+      const response = await axiosInstance.get('/auth/profile',
+        {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        }
+      );
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  },
+  
+  getMyPosts: async () => {
+    try {
+      const response = await axiosInstance.get('/items/my-posts');
+      return response.data;
+    } catch (error) {
+      console.error('Error fetching my posts:', error);
+      return {
+        success: false,
+        message: error.response?.data?.message || 'Không thể tải danh sách bài đăng'
+      };
+    }
+  },
 };
 
 export default apiService; 

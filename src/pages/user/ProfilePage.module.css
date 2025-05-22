@@ -1,0 +1,492 @@
+.profileContainer {
+  display: flex;
+  max-width: 1400px;
+  width: 60%;
+  margin: 70px auto 0 auto;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 2px 16px rgba(0,0,0,0.06);
+  min-height: 80vh;
+  margin-bottom: 32px;
+}
+
+.profileSidebar {
+  width: 320px;
+  background: #fafbfc;
+  border-radius: 12px 0 0 12px;
+  padding: 28px 18px 18px 18px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  border-right: 1px solid #f0f0f0;
+}
+
+.avatarWrapper {
+  position: relative;
+  width: 80px;
+  height: 80px;
+  margin-bottom: 8px;
+}
+.avatar {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid #fff;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+.avatarIcon {
+  width: 80px;
+  height: 80px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: #e3eaf6;
+}
+.avatarIcon i {
+  font-size: 64px;
+  color: #b0b9c8;
+}
+.avatarCamera {
+  position: absolute;
+  right: 2px;
+  bottom: 2px;
+  background: #fff;
+  border: 1px solid #eee;
+  border-radius: 50%;
+  width: 26px;
+  height: 26px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+  padding: 0;
+}
+.avatarCamera i {
+  color: #6699CC;
+  font-size: 16px;
+}
+.profileName {
+  font-size: 17px;
+  font-weight: 600;
+  margin-bottom: 2px;
+  color: #222;
+  text-align: center;
+}
+.profileRating {
+  color: #888;
+  font-size: 12px;
+  margin-bottom: 10px;
+  text-align: center;
+}
+.profileActionRow {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+.iconBtn {
+  background: #e3eaf6;
+  border: none;
+  border-radius: 50%;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background 0.2s;
+  padding: 0;
+}
+.iconBtn i {
+  color: #6699CC;
+  font-size: 18px;
+}
+.iconBtn:hover {
+  background: #d0dff5;
+}
+.profileMeta {
+  width: 100%;
+  margin-top: 6px;
+  color: #444;
+  font-size: 12px;
+}
+.profileMeta > div {
+  display: flex;
+  align-items: center;
+  margin-bottom: 6px;
+  gap: 4px;
+}
+.profileMeta i.material-icons {
+  font-size: 15px;
+  color: #6699CC;
+}
+.verifiedRow {
+  align-items: center;
+  gap: 4px;
+}
+.verifiedIcons i {
+  font-size: 15px;
+  margin-right: 2px;
+  color: #bbb;
+}
+
+.profileContent {
+  flex: 1;
+  padding: 28px 24px 28px 24px;
+  display: flex;
+  flex-direction: column;
+}
+.tabs {
+  display: flex;
+  gap: 32px;
+  border-bottom: 2px solid #f5f5f5;
+  margin-bottom: 18px;
+}
+.tab, .tabActive {
+  font-size: 15px;
+  font-weight: 500;
+  padding-bottom: 8px;
+  cursor: pointer;
+  color: #888;
+  position: relative;
+  transition: color 0.2s;
+}
+.tabActive {
+  color: #6699CC;
+}
+.tabActive::after {
+  content: '';
+  display: block;
+  height: 2px;
+  width: 100%;
+  background: #6699CC;
+  border-radius: 2px;
+  position: absolute;
+  left: 0;
+  bottom: -2px;
+}
+.tabContent {
+  flex: 1;
+  min-height: 300px;
+}
+.emptyState {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin-top: 40px;
+}
+.emptyText {
+  font-size: 15px;
+  color: #888;
+  margin: 12px 0 12px 0;
+  text-align: center;
+}
+.postNowBtn {
+  background: #6699CC;
+  color: #fff;
+  border: none;
+  border-radius: 7px;
+  padding: 10px 28px;
+  font-size: 15px;
+  font-weight: 600;
+  margin-top: 6px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.postNowBtn:hover {
+  background: #4177b6;
+}
+.postList {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 18px;
+  margin-top: 6px;
+}
+.postItem {
+  display: flex;
+  align-items: center;
+  padding: 16px;
+  border-bottom: 1px solid #eee;
+  position: relative;
+}
+.postImage {
+  width: 120px;
+  height: 90px;
+  margin-right: 16px;
+  flex-shrink: 0;
+}
+.postImage img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 4px;
+}
+.postInfo {
+  flex: 1;
+  min-width: 0;
+}
+.postInfo h3 {
+  margin: 0 0 8px;
+  font-size: 16px;
+  font-weight: 500;
+  color: #333;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.postInfo .price {
+  color: #6699CC;
+  font-weight: 500;
+  margin: 0 0 8px;
+  font-size: 14px;
+}
+.postInfo .description {
+  color: #666;
+  font-size: 13px;
+  margin: 0;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.postActions {
+  position: relative;
+  margin-left: 16px;
+}
+.menuButton {
+  background: none;
+  border: none;
+  padding: 8px;
+  cursor: pointer;
+  color: #666;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.menuButton:hover {
+  background-color: #f5f5f5;
+}
+.menuDropdown {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  background: white;
+  border-radius: 4px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+  z-index: 1000;
+  min-width: 160px;
+  margin-top: 4px;
+}
+.menuDropdown button {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  padding: 8px 16px;
+  border: none;
+  background: none;
+  cursor: pointer;
+  color: #333;
+  font-size: 14px;
+  text-align: left;
+}
+.menuDropdown button:hover {
+  background-color: #f5f5f5;
+}
+.menuDropdown button i {
+  margin-right: 8px;
+  font-size: 18px;
+}
+.menuDropdown button:last-child {
+  color: #dc3545;
+}
+.menuDropdown button:last-child i {
+  color: #dc3545;
+}
+.editButton, .deleteButton {
+  padding: 4px 10px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 500;
+  transition: background-color 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 2px;
+}
+.editButton {
+  background-color: #e3eaf6;
+  color: #6699CC;
+  border: 1px solid #6699CC;
+}
+.editButton i {
+  font-size: 16px;
+}
+.editButton:hover {
+  background-color: #d0dff5;
+}
+.deleteButton {
+  background-color: #fff;
+  color: #f44336;
+  border: 1px solid #f44336;
+}
+.deleteButton i {
+  font-size: 16px;
+}
+.deleteButton:hover {
+  background-color: #ffeaea;
+}
+@media (max-width: 900px) {
+  .profileContainer {
+    flex-direction: column;
+    min-height: unset;
+    max-width: 100vw;
+  }
+  .profileSidebar {
+    width: 100%;
+    border-radius: 12px 12px 0 0;
+    border-right: none;
+    border-bottom: 1px solid #f0f0f0;
+  }
+  .profileContent {
+    padding: 18px 4px;
+  }
+  .postList {
+    grid-template-columns: 1fr;
+  }
+}
+
+.modalOverlay {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0,0,0,0.35);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.modalContent {
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 4px 32px rgba(0,0,0,0.18);
+  padding: 32px 24px 24px 24px;
+  position: relative;
+  max-width: 900px;
+  width: 100%;
+  min-width: 320px;
+  max-height: 90vh;
+  overflow-y: auto;
+  animation: modalFadeIn 0.2s;
+}
+
+@keyframes modalFadeIn {
+  from { opacity: 0; transform: translateY(40px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.closeModalBtn {
+  position: sticky;
+  top: 12px;
+  right: 12px;
+  background: #f5f5f5;
+  border: none;
+  border-radius: 50%;
+  width: 36px;
+  height: 36px;
+  font-size: 20px;
+  color: #333;
+  cursor: pointer;
+  transition: background 0.2s;
+  z-index: 10;
+  float: right;
+  margin-left: auto;
+}
+
+.closeModalBtn:hover {
+  background: #e0e0e0;
+}
+
+.menuWrapper {
+  position: relative;
+  display: inline-block;
+}
+
+.nameEditContainer {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+}
+
+.nameEditInput {
+  flex: 1;
+  padding: 4px 8px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 16px;
+  text-align: center;
+}
+
+.nameEditInput:focus {
+  outline: none;
+}
+
+.nameSaveBtn,
+.nameCancelBtn,
+.nameEditBtn {
+  background: none;
+  border: none;
+  padding: 4px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #666;
+  transition: color 0.2s;
+}
+
+.nameSaveBtn:hover {
+  color: #4CAF50;
+}
+
+.nameCancelBtn:hover {
+  color: #f44336;
+}
+
+.nameEditBtn:hover {
+  color: #2196F3;
+}
+
+.nameSaveBtn:disabled,
+.nameCancelBtn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.spinner {
+  width: 16px;
+  height: 16px;
+  border: 2px solid #f3f3f3;
+  border-top: 2px solid #3498db;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.profileName {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 18px;
+  font-weight: 500;
+  margin: 12px 0;
+} 

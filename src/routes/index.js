@@ -4,6 +4,8 @@ import ForgotPassword from '../pages/auth/ForgotPassword';
 import Login from '../pages/auth/Login';
 import Register from '../pages/auth/Register';
 import PostPage from '../pages/user/PostPage';
+import EditPostPage from '../pages/user/EditPostPage';
+import ProfilePage from '../pages/user/ProfilePage';
 // Public routes - accessible without authentication
 export const publicRoutes = [
   {
@@ -34,6 +36,16 @@ export const publicRoutes = [
   {
     path: '/post',
     component: PostPage,
+    exact: true
+  },
+  {
+    path: '/edit-post',
+    component: EditPostPage,
+    exact: true
+  },
+  {
+    path: '/my-profile',
+    component: ProfilePage,
     exact: true
   }
 ];

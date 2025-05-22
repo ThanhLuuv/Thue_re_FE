@@ -6,6 +6,8 @@ import Footer from './components/Footer';
 import PrivateRoute from './components/PrivateRoute';
 import PublicRoute from './components/PublicRoute';
 import { publicRoutes, privateRoutes, authRoutes } from './routes';
+import { AuthProvider } from './contexts/AuthContext';
+import { EditPostProvider } from './contexts/EditPostContext';
 
 // Create theme
 const theme = createTheme({
@@ -39,53 +41,57 @@ function App() {
                     window.location.pathname.includes('/forgot-password');
 
   return (
-    <ThemeProvider theme={theme}>
-      <CssBaseline />
-      <Router>
-        <div style={appStyles.app}>
-            <Routes>
-              {/* Public Routes */}
-              {publicRoutes.map((route) => (
-                <Route
-                  key={route.path}
-                  path={route.path}
-                  element={
-                    <PublicRoute>
-                      <route.component />
-                    </PublicRoute>
-                  }
-                />
-              ))}
+    <AuthProvider>
+      <EditPostProvider>
+        <ThemeProvider theme={theme}>
+          <CssBaseline />
+          <Router>
+            <div style={appStyles.app}>
+              <Routes>
+                {/* Public Routes */}
+                {publicRoutes.map((route) => (
+                  <Route
+                    key={route.path}
+                    path={route.path}
+                    element={
+                      <PublicRoute>
+                        <route.component />
+                      </PublicRoute>
+                    }
+                  />
+                ))}
 
-              {/* Private Routes */}
-              {privateRoutes.map((route) => (
-                <Route
-                  key={route.path}
-                  path={route.path}
-                  element={
-                    <PrivateRoute>
-                      <route.component />
-                    </PrivateRoute>
-                  }
-                />
-              ))}
+                {/* Private Routes */}
+                {privateRoutes.map((route) => (
+                  <Route
+                    key={route.path}
+                    path={route.path}
+                    element={
+                      <PrivateRoute>
+                        <route.component />
+                      </PrivateRoute>
+                    }
+                  />
+                ))}
 
-              {/* Auth Routes */}
-              {authRoutes.map((route) => (
-                <Route
-                  key={route.path}
-                  path={route.path}
-                  element={
-                    <PublicRoute>
-                      <route.component />
-                    </PublicRoute>
-                  }
-                />
-              ))}
-            </Routes>
-          </div>
-      </Router>
-    </ThemeProvider>
+                {/* Auth Routes */}
+                {authRoutes.map((route) => (
+                  <Route
+                    key={route.path}
+                    path={route.path}
+                    element={
+                      <PublicRoute>
+                        <route.component />
+                      </PublicRoute>
+                    }
+                  />
+                ))}
+              </Routes>
+            </div>
+          </Router>
+        </ThemeProvider>
+      </EditPostProvider>
+    </AuthProvider>
   );
 }
 
