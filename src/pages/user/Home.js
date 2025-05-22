@@ -120,7 +120,6 @@ const Home = () => {
     params.append('category', category.category_name);
     if (selectedLocation) params.append('location', selectedLocation);
     if (searchQuery) params.append('q', searchQuery);
-    console.log('Navigating to search with params:', params.toString());
     navigate(`/search?${params.toString()}`);
   };
 
@@ -130,7 +129,6 @@ const Home = () => {
     if (query) params.append('q', query);
     if (selectedLocation) params.append('location', selectedLocation);
     if (selectedCategory) params.append('category', selectedCategory);
-    console.log('Navigating to search with params:', params.toString());
     navigate(`/search?${params.toString()}`);
   };
 
@@ -140,7 +138,6 @@ const Home = () => {
     if (location) params.append('location', location);
     if (searchQuery) params.append('q', searchQuery);
     if (selectedCategory) params.append('category', selectedCategory);
-    console.log('Navigating to search with params:', params.toString());
     navigate(`/search?${params.toString()}`);
   };
 

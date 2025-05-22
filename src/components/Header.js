@@ -403,7 +403,10 @@ const HeaderComponent = ({ onSearch, onLocationChange, selectedLocation }) => {
                   <MenuItem sx={{ fontSize: '13px' }}><SavedSearchIcon sx={{mr: 1, fontSize: 16}} /> Tìm kiếm đã lưu</MenuItem> */}
                   <MenuItem sx={{ fontSize: '13px' }}><SettingsIcon sx={{mr: 1, fontSize: 16}} /> Cài đặt tài khoản</MenuItem>
                   <MenuItem sx={{ fontSize: '13px' }}><HelpIcon sx={{mr: 1, fontSize: 16}} /> Trợ giúp</MenuItem>
-                  <MenuItem sx={{ fontSize: '13px' }}><LogoutIcon sx={{mr: 1, fontSize: 16}} /> <Link style={{textDecoration: 'none', color: 'inherit'}} to="/login">Đăng xuất</Link></MenuItem>
+                  <MenuItem sx={{ fontSize: '13px' }}><LogoutIcon sx={{mr: 1, fontSize: 16}} /> <Link style={{textDecoration: 'none', color: 'inherit'}} to="/login" onClick={() => {
+                    tokenService.removeToken();
+                    window.location.href = '/login';
+                  }}>Đăng xuất</Link></MenuItem>
                 </Box>
               </Box>
             )}

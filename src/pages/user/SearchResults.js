@@ -46,7 +46,6 @@ const SearchResults = () => {
       setLoadingCategories(true);
       const response = await apiService.getCategories();
       if (response.success) {
-        console.log('Categories response:', response);
         setCategories(response.data || []);
       } else {
         const errorResult = handleApiError(response);
@@ -360,9 +359,9 @@ const SearchResults = () => {
             <div className={styles.modalBody}>
               <div className={styles.priceSlider}>
                 <Range
-                  step={100000}
+                  step={10000}
                   min={0}
-                  max={100000000}
+                  max={10000000}
                   values={tempPriceRange}
                   onChange={(values) => setTempPriceRange(values)}
                   renderTrack={({ props, children }) => (

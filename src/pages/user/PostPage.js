@@ -33,6 +33,7 @@ const PostPage = () => {
   const [categories, setCategories] = useState([]);
   const [loadingCategories, setLoadingCategories] = useState(true);
   const [loading, setLoading] = useState(false);
+  const [uploadingImages, setUploadingImages] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedLocation, setSelectedLocation] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('');
@@ -60,7 +61,6 @@ const PostPage = () => {
       setLoadingCategories(true);
       const response = await apiService.getCategories();
       if (response.success) {
-        console.log('Categories response:', response);
         setCategories(response.data || []);
       } else {
         const errorResult = handleApiError(response);
@@ -260,6 +260,7 @@ const PostPage = () => {
     const files = Array.from(e.target.files);
     
     try {
+      setUploadingImages(true);
       // Upload each image to Cloudinary
       const uploadPromises = files.map(async (file) => {
         const formData = new FormData();
@@ -309,6 +310,8 @@ const PostPage = () => {
     } catch (error) {
       console.error('Error uploading images:', error);
       toast.error(error.message || 'Lỗi khi tải ảnh lên');
+    } finally {
+      setUploadingImages(false);
     }
   };
 
@@ -482,9 +485,15 @@ const PostPage = () => {
                           accept="image/*"
                           multiple
                           onChange={handleImageUpload}
-                          disabled={formData.images.length >= MAX_IMAGES}
+                          disabled={formData.images.length >= MAX_IMAGES || uploadingImages}
                         />
-                        <i className="material-icons">cloud_upload</i>
+                        {uploadingImages ? (
+                          <div className={styles.uploadingIndicator}>
+                            <div className={styles.spinner}></div>
+                          </div>
+                        ) : (
+                          <i className="material-icons">cloud_upload</i>
+                        )}
                       </label>
                   )}
                   {errors.images && <p style={{textAlign: 'center'}} className={styles.errorText}>{errors.images}</p>}
