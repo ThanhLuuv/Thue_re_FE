@@ -13,7 +13,7 @@ export const ErrorTypes = {
 const toastConfig = {
   position: "top-right",
   autoClose: 5000,
-  hideProgressBar: false,
+  hideProgressBar: true,
   closeOnClick: true,
   pauseOnHover: true,
   draggable: true,
@@ -123,34 +123,39 @@ export const ErrorDisplay = React.memo(({ error }) => {
   if (!error) return null;
 
   const getErrorIcon = (type) => {
+    const iconStyle = {
+      fontSize: '24px',
+      marginRight: '8px'
+    };
+
     switch (type) {
       case ErrorTypes.NETWORK:
-        return '🌐';
+        return <span className="material-icons" style={iconStyle}>wifi_off</span>;
       case ErrorTypes.SERVER:
-        return '🔧';
+        return <span className="material-icons" style={iconStyle}>build</span>;
       case ErrorTypes.VALIDATION:
-        return '⚠️';
+        return <span className="material-icons" style={iconStyle}>warning</span>;
       case ErrorTypes.AUTH:
-        return '🔒';
+        return <span className="material-icons" style={iconStyle}>lock</span>;
       case ErrorTypes.NOT_FOUND:
-        return '🔍';
+        return <span className="material-icons" style={iconStyle}>search_off</span>;
       default:
-        return '❌';
+        return <span className="material-icons" style={iconStyle}>error</span>;
     }
   };
 
   return (
-    <div className="error-display" data-type={error.type}>
+    <div className="error-display" data-type={error.type} style={{ display: 'flex', alignItems: 'center', padding: '16px', backgroundColor: '#fee', border: '1px solid #fcc', borderRadius: '4px', marginBottom: '16px' }}>
       <div className="error-icon">{getErrorIcon(error.type)}</div>
       <div className="error-content">
-        <h3>{error.message}</h3>
+        <h3 style={{ margin: '0 0 8px 0', color: '#d32f2f' }}>{error.message}</h3>
         {error.details && (
           <div className="error-details">
             {Array.isArray(error.details) 
               ? error.details.map((detail, index) => (
-                  <p key={index}>{detail}</p>
+                  <p key={index} style={{ margin: '4px 0', color: '#666' }}>{detail}</p>
                 ))
-              : <p>{error.details}</p>
+              : <p style={{ margin: '4px 0', color: '#666' }}>{error.details}</p>
             }
           </div>
         )}
@@ -165,4 +170,4 @@ export const useErrorHandler = () => {
   }, []);
 
   return { handleApiError };
-}; 
+};

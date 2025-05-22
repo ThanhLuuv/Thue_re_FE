@@ -16,7 +16,7 @@ import {
 } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import PersonAddOutlinedIcon from '@mui/icons-material/PersonAddOutlined';
-import apiService from '../services/apiService';
+import apiService from '../../services/apiService';
 
 const StyledPaper = styled(Paper)(({ theme }) => ({
   padding: theme.spacing(4),

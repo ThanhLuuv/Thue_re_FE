@@ -3,14 +3,15 @@ import { useNavigate } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
 import { Range } from 'react-range';
 import 'react-toastify/dist/ReactToastify.css';
-import apiService from '../services/apiService';
-import { useErrorHandler, ErrorDisplay } from '../services/errorService';
-import Header from '../components/Header';
+import apiService from '../../services/apiService';
+import { useErrorHandler } from '../../services/errorService';
+import Header from '../../components/Header';
 import { Link, useLocation } from 'react-router-dom';
-import images from '../assets/img/img.png';
-import empty from '../assets/img/empty.png';
-import './SearchResults.css';
-import Footer from '../components/Footer';
+import images from '../../assets/img/img.png';
+import empty from '../../assets/img/empty.png';
+import styles from './SearchResults.module.css';
+import Footer from '../../components/Footer';
+
 function useQuery() {
   return new URLSearchParams(useLocation().search);
 }
@@ -267,8 +268,45 @@ const SearchResults = () => {
   };
 
   return (
-    <div className="styled-box">
-      <ToastContainer />
+    <div className={styles.styledBox}>
+      <ToastContainer
+        position="top-right"
+        autoClose={3000}
+        hideProgressBar
+        newestOnTop
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss={false}
+        draggable={false}
+        pauseOnHover={false}
+        theme="light"
+        closeButton={false}
+        style={{ top: '20px', right: '20px' }}
+        toastStyle={{
+          background: 'white',
+          color: '#333',
+          fontSize: '12px',
+          padding: '8px 12px',
+          borderRadius: '4px',
+          boxShadow: '0 2px 8px rgba(0,0,0,0.15)',
+          maxWidth: 'fit-content',
+          lineHeight: '1.2',
+          minHeight: 'auto',
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          height: '100%',
+          cursor: 'pointer'
+        }}
+        bodyStyle={{
+          margin: 0,
+          padding: 0,
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          height: '100%'
+        }}
+      />
       <Header 
         onSearch={handleHeaderSearch}
         onLocationChange={handleHeaderLocationChange}
@@ -276,14 +314,14 @@ const SearchResults = () => {
         initialQuery={searchParams.query}
       />
       
-      <div className="filter-section">
-        <div className="filter-content">
-          <div className="filter-group">
-            <span className="filter-label">Danh mục</span>
+      <div className={styles.filterSection}>
+        <div className={styles.filterContent}>
+          <div className={styles.filterGroup}>
+            <span className={styles.filterLabel}>Danh mục</span>
             <select 
               value={searchParams.category || ''}
               onChange={(e) => handleHeaderCategoryChange(e.target.value)}
-              className="filter-select"
+              className={styles.filterSelect}
             >
               <option value="">Tất cả</option>
               {loadingCategories ? (
@@ -300,27 +338,27 @@ const SearchResults = () => {
             </select>
           </div>
 
-          <div className="filter-group">
-            <span className="filter-label" onClick={handleOpenPriceModal}>Giá</span>
-            <span className="filter-dropdown" onClick={handleOpenPriceModal}>▼</span>
+          <div className={styles.filterGroup}>
+            <span className={styles.filterLabel} onClick={handleOpenPriceModal}>Giá</span>
+            <span className={styles.filterDropdown} onClick={handleOpenPriceModal}>▼</span>
             {(searchParams.lowprice || searchParams.highprice) && (
-              <span className="filter-active-indicator">●</span>
+              <span className={styles.filterActiveIndicator}>●</span>
             )}
           </div>
         </div>
       </div>
 
       {openPriceModal && (
-        <div className="modal">
-          <div className="modal-content">
-            <div className="modal-header">
-              <h2 className="modal-title">Lọc theo giá</h2>
-              <button className="modal-close" onClick={handleClosePriceModal}>
+        <div className={styles.modal}>
+          <div className={styles.modalContent}>
+            <div className={styles.modalHeader}>
+              <h2 className={styles.modalTitle}>Lọc theo giá</h2>
+              <button className={styles.modalClose} onClick={handleClosePriceModal}>
                 <span className="material-icons">close</span>
               </button>
             </div>
-            <div className="modal-body">
-              <div className="price-slider">
+            <div className={styles.modalBody}>
+              <div className={styles.priceSlider}>
                 <Range
                   step={100000}
                   min={0}
@@ -357,8 +395,8 @@ const SearchResults = () => {
                   )}
                 />
               </div>
-              <div className="price-inputs">
-                <div className="price-input-filter">
+              <div className={styles.priceInputs}>
+                <div className={styles.priceInputFilter}>
                   <input
                     type="text"
                     placeholder="Giá tối thiểu"
@@ -368,10 +406,10 @@ const SearchResults = () => {
                       setTempPriceRange([value, tempPriceRange[1]]);
                     }}
                   />
-                  <span className="currency-filter">đ</span>
+                  <span className={styles.currencyFilter}>đ</span>
                 </div>
                 <span>-</span>
-                <div className="price-input-filter">
+                <div className={styles.priceInputFilter}>
                   <input
                     type="text"
                     placeholder="Giá tối đa"
@@ -381,15 +419,15 @@ const SearchResults = () => {
                       setTempPriceRange([tempPriceRange[0], value]);
                     }}
                   />
-                  <span className="currency-filter">đ</span>
+                  <span className={styles.currencyFilter}>đ</span>
                 </div>
               </div>
             </div>
-            <div className="modal-footer">
-              <button className="modal-button outline" onClick={handleResetPriceFilter}>
+            <div className={styles.modalFooter}>
+              <button className={`${styles.modalButton} ${styles.modalButtonOutline}`} onClick={handleResetPriceFilter}>
                 Xóa lọc
               </button>
-              <button className="modal-button primary" onClick={handleApplyPriceFilter}>
+              <button className={`${styles.modalButton} ${styles.modalButtonPrimary}`} onClick={handleApplyPriceFilter}>
                 Áp dụng
               </button>
             </div>
@@ -397,21 +435,21 @@ const SearchResults = () => {
         </div>
       )}
 
-      <div className="products-section">
+      <div className={styles.productsSection}>
         {loading ? (
-          <div className="loading">
-            <div className="spinner"></div>
+          <div className={styles.loading}>
+            <div className={styles.spinner}></div>
           </div>
         ) : items.length === 0 ? (
-          <div className="empty-state">
-            <img src={empty} alt="empty" className="empty-image" />
+          <div className={styles.emptyState}>
+            <img src={empty} alt="empty" className={styles.emptyImage} />
             <p>Không tìm thấy kết quả</p>
           </div>
         ) : (
-          <div className="products-grid">
+          <div className={styles.productsGrid}>
             {items.map((item) => (
-              <Link key={item.item_id} to={`/product/${item.item_id}`} className="product-card">
-                <div className="product-image">
+              <Link key={item.item_id} to={`/product/${item.item_id}`} className={styles.productCard}>
+                <div className={styles.productImage}>
                   <img 
                     src={imageErrors[item.item_id] ? images : (item.images?.find(img => img.is_primary)?.image_url || images)}
                     alt={item.item_name}
@@ -419,10 +457,10 @@ const SearchResults = () => {
                     loading="lazy"
                   />
                 </div>
-                <div className="product-info">
-                  <h3 className="product-title">{item.item_name}</h3>
-                  <p className="product-price">{new Intl.NumberFormat('vi-VN').format(item.rental_price)} VND/ngày</p>
-                  <div className="product-meta">
+                <div className={styles.productInfo}>
+                  <h3 className={styles.productTitle}>{item.item_name}</h3>
+                  <p className={styles.productPrice}>{new Intl.NumberFormat('vi-VN').format(item.rental_price)} VND/ngày</p>
+                  <div className={styles.productMeta}>
                     <span>{item.item_locations?.[0]?.location?.province || ''}</span>
                     <span>{new Date(item.created_at).toLocaleDateString('vi-VN')}</span>
                   </div>
@@ -434,9 +472,9 @@ const SearchResults = () => {
       </div>
 
       {totalPages > 1 && items.length > 0 && (
-        <div className="pagination">
+        <div className={styles.pagination}>
           <button
-            className="page-button icon-button"
+            className={`${styles.pageButton} ${styles.iconButton}`}
             disabled={page === 1}
             onClick={() => handlePageChange(page - 1)}
           >
@@ -445,14 +483,14 @@ const SearchResults = () => {
           {Array.from({ length: totalPages }, (_, i) => i + 1).map((p) => (
             <button
               key={p}
-              className={`page-button page-number ${p === page ? 'active' : ''}`}
+              className={`${styles.pageButton} ${styles.pageNumber} ${p === page ? styles.pageNumberActive : ''}`}
               onClick={() => handlePageChange(p)}
             >
               {p}
             </button>
           ))}
           <button
-            className="page-button icon-button"
+            className={`${styles.pageButton} ${styles.iconButton}`}
             disabled={page === totalPages}
             onClick={() => handlePageChange(page + 1)}
           >
@@ -460,7 +498,7 @@ const SearchResults = () => {
           </button>
         </div>
       )}
-    <Footer />
+      <Footer />
     </div>
   );
 };

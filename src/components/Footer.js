@@ -5,7 +5,6 @@ const footerStyles = {
   bottom: {
     backgroundColor: '#ffffff',
     textAlign: 'center',
-    marginTop: '20px',
     paddingTop: '10px',
     paddingBottom: '10px',
     borderTop: '1px solid #ddd',
@@ -16,7 +15,7 @@ const footerStyles = {
 const Footer = () => {
   return (
       <div style={footerStyles.bottom}>
-        <p>&copy; {new Date().getFullYear()} ThueXe. Tất cả quyền được bảo lưu.</p>
+        <p>&copy; {new Date().getFullYear()} ThueRe. Tất cả quyền được bảo lưu.</p>
       </div>
   );
 };

@@ -16,7 +16,7 @@ import { styled } from '@mui/material/styles';
 import LockResetIcon from '@mui/icons-material/LockReset';
 import VerifiedUserIcon from '@mui/icons-material/VerifiedUser';
 import KeyIcon from '@mui/icons-material/Key';
-import apiService from '../services/apiService';
+import apiService from '../../services/apiService';
 
 const StyledPaper = styled(Paper)(({ theme }) => ({
   padding: theme.spacing(4),

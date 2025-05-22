@@ -1,10 +1,9 @@
-import Home from '../pages/Home';
-import SearchResults from '../pages/SearchResults';
-import ForgotPassword from '../pages/ForgotPassword';
-import Login from '../pages/Login';
-import Register from '../pages/Register';
-import Upload from '../pages/Upload';
-import PostPage from '../pages/PostPage';
+import Home from '../pages/user/Home';
+import SearchResults from '../pages/user/SearchResults';
+import ForgotPassword from '../pages/auth/ForgotPassword';
+import Login from '../pages/auth/Login';
+import Register from '../pages/auth/Register';
+import PostPage from '../pages/user/PostPage';
 // Public routes - accessible without authentication
 export const publicRoutes = [
   {
@@ -30,11 +29,6 @@ export const publicRoutes = [
   {
     path: '/register',
     component: Register,
-    exact: true
-  },
-  {
-    path: '/upload',
-    component: Upload,
     exact: true
   },
   {

@@ -4,12 +4,15 @@ import { LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { vi } from 'date-fns/locale';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
-import Header from '../components/Header';
-import './PostPage.css';
-import apiService from '../services/apiService';
+import Header from '../../components/Header';
+import styles from './PostPage.module.css';
+import apiService from '../../services/apiService';
 import { toast, ToastContainer } from 'react-toastify';
-import cloudinaryConfig from '../config/cloudinary';
+import cloudinaryConfig from '../../config/cloudinary';
 import { useNavigate } from 'react-router-dom';
+import { useErrorHandler, ErrorDisplay } from '../../services/errorService';
+import Footer from '../../components/Footer';
+
 // Add Google Material Icons
 const link = document.createElement('link');
 link.href = 'https://fonts.googleapis.com/icon?family=Material+Icons';
@@ -34,6 +37,9 @@ const PostPage = () => {
   const [selectedLocation, setSelectedLocation] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('');
   const navigate = useNavigate();
+  const { handleApiError } = useErrorHandler();
+  const [error, setError] = useState(null);
+
   const [formData, setFormData] = useState({
     itemData: {
       category_id: '',
@@ -57,12 +63,12 @@ const PostPage = () => {
         console.log('Categories response:', response);
         setCategories(response.data || []);
       } else {
-        toast.error('Không thể tải danh mục');
+        const errorResult = handleApiError(response);
         setCategories([]);
       }
     } catch (err) {
       console.error('Error fetching categories:', err);
-      toast.error('Lỗi khi tải danh mục');
+      const errorResult = handleApiError(err);
       setCategories([]);
     } finally {
       setLoadingCategories(false);
@@ -150,15 +156,16 @@ const PostPage = () => {
         const result = await apiService.createItem(formData);
         if(result?.success) {
           console.log('Đăng tin thành công');
-          toast.success('Đăng tin thành công');
-          // Reload page after successful post
+          // toast.success('Đăng tin thành công');
+          // // Reload page after successful post
+          const errorResult = handleApiError(result);
           setTimeout(() => {
             window.location.reload();
           }, 1500); // Wait for 1.5 seconds to show success message
         }
       } catch (error) {
         console.error('Error creating item:', error);
-        toast.error('Lỗi khi đăng tin');
+        handleApiError(error);
         setLoading(false); // Only set loading to false if there's an error
       }
     }
@@ -418,7 +425,8 @@ const PostPage = () => {
   };
 
   return (
-    <div className="container">
+    <>
+    <div className={styles.container}>
       <Header onSearch={handleHeaderSearch} onLocationChange={handleHeaderLocationChange} />
       <ToastContainer
         position="top-right"
@@ -458,18 +466,18 @@ const PostPage = () => {
           height: '100%'
         }}
       />
-      <div className="post-form">
-        <h1 className="form-title">Đăng tin mới</h1>
+      <div className={styles.postForm}>
+        <h1 className={styles.formTitle}>Đăng tin mới</h1>
 
         <form onSubmit={handleSubmit}>
           {step === 1 ? (
-            <div className="form-step">
-              <div className="form-column">
-                <div className="form-section">
+            <div className={styles.formStep}>
+              <div className={styles.formColumn}>
+                <div className={styles.formSection}>
                   <h2>Hình ảnh ({formData.images.length}/{MAX_IMAGES})</h2>
                   {
                     formData.images.length < MAX_IMAGES && (
-                      <label className="upload-button">
+                      <label className={styles.uploadButton}>
                         <input
                           type="file"
                           accept="image/*"
@@ -480,12 +488,12 @@ const PostPage = () => {
                         <i className="material-icons">cloud_upload</i>
                       </label>
                   )}
-                  {errors.images && <p style={{textAlign: 'center'}} className="error-text">{errors.images}</p>}
+                  {errors.images && <p style={{textAlign: 'center'}} className={styles.errorText}>{errors.images}</p>}
                   <DragDropContext onDragEnd={onDragEnd}>
                     <Droppable droppableId="images" direction="horizontal" type="IMAGE">
                       {(provided, snapshot) => (
                         <div 
-                          className={`image-list ${snapshot.isDraggingOver ? 'dragging-over' : ''}`}
+                          className={`${styles.imageList} ${snapshot.isDraggingOver ? styles.draggingOver : ''}`}
                           ref={provided.innerRef} 
                           {...provided.droppableProps}
                         >
@@ -498,27 +506,27 @@ const PostPage = () => {
                             >
                               {(provided, snapshot) => (
                                 <div 
-                                  className={`image-item ${snapshot.isDragging ? 'dragging' : ''}`}
+                                  className={`${styles.imageItem} ${snapshot.isDragging ? styles.dragging : ''}`}
                                   ref={provided.innerRef} 
-                                  {...provided.draggableProps} 
+                                  {...provided.droppableProps} 
                                   {...provided.dragHandleProps}
                                 >
                                   <img src={image.image_url} alt={`Preview ${index + 1}`} />
-                                  <div className="image-actions">
+                                  <div className={styles.imageActions}>
                                     <button type="button" onClick={() => removeImage(index)}>
-                                      <i className="delete-icon"></i>
+                                      <i className={styles.deleteIcon}></i>
                                     </button>
                                   </div>
                                   {image.is_primary && (
-                                    <span className="primary-badge">Ảnh chính</span>
+                                    <span className={styles.primaryBadge}>Ảnh chính</span>
                                   )}
                                   <button
                                     type="button"
-                                    className="set-primary-btn"
+                                    className={styles.setPrimaryBtn}
                                     onClick={() => setPrimaryImage(index)}
                                     disabled={image.is_primary}
                                   >
-                                    <i className={`star-icon ${image.is_primary ? 'disabled' : ''}`}></i>
+                                    <i className={`${styles.starIcon} ${image.is_primary ? styles.disabled : ''}`}></i>
                                   </button>
                                 </div>
                               )}
@@ -532,11 +540,11 @@ const PostPage = () => {
                 </div>
               </div>
 
-              <div className="form-column">
-                <div className="form-section">
+              <div className={styles.formColumn}>
+                <div className={styles.formSection}>
                   <h2>Thông tin cơ bản</h2>
-                  <div className="form-row">
-                    <div className="form-group">
+                  <div className={styles.formRow}>
+                    <div className={styles.formGroup}>
                       <label>Danh mục tin</label>
                       <select
                         name="category_id"
@@ -557,13 +565,13 @@ const PostPage = () => {
                           <option disabled>Không có danh mục</option>
                         )}
                       </select>
-                      {errors.category && <p className="error-text">{errors.category}</p>}
+                      {errors.category && <p className={styles.errorText}>{errors.category}</p>}
                     </div>
 
-                    <div className="form-group">
+                    <div className={styles.formGroup}>
                       <label>Giá thuê</label>
-                      <div className="price-input">
-                        <span className="currency">₫</span>
+                      <div className={styles.priceInput}>
+                        <span className={styles.currency}>₫</span>
                         <input
                           type="text"
                           name="rental_price"
@@ -571,14 +579,14 @@ const PostPage = () => {
                           onChange={handleInputChange}
                           placeholder="Nhập giá thuê"
                           maxLength={10}
-                          className={errors.price ? 'error-input' : ''}
+                          className={errors.price ? styles.errorInput : ''}
                         />
                       </div>
-                      {errors.price && <p className="error-text">{errors.price}</p>}
+                      {errors.price && <p className={styles.errorText}>{errors.price}</p>}
                     </div>
                   </div>
 
-                  <div className="form-group">
+                  <div className={styles.formGroup}>
                     <label>Tên hiển thị</label>
                     <input
                       type="text"
@@ -586,10 +594,10 @@ const PostPage = () => {
                       value={formData.itemData.item_name}
                       onChange={handleInputChange}
                     />
-                    {errors.title && <p className="error-text">{errors.title}</p>}
+                    {errors.title && <p className={styles.errorText}>{errors.title}</p>}
                   </div>
 
-                  <div className="form-group">
+                  <div className={styles.formGroup}>
                     <label>Chi tiết</label>
                     <textarea
                       name="description"
@@ -597,78 +605,78 @@ const PostPage = () => {
                       onChange={handleInputChange}
                       rows={4}
                     />
-                    {errors.description && <p className="error-text">{errors.description}</p>}
+                    {errors.description && <p className={styles.errorText}>{errors.description}</p>}
                   </div>
                 </div>
-                <button type="button" className="btn-next" onClick={handleNextStep}>
+                <button type="button" className={styles.btnNext} onClick={handleNextStep}>
                   <i className="material-icons">arrow_forward</i>
                 </button>
               </div>
 
             </div>
           ) : (
-            <div className="form-step">
-              <div className="form-section">
+            <div className={styles.formStep}>
+              <div className={styles.formSection}>
                 <h2>Thời gian cho thuê</h2>
                 {formData.availability.map((period, index) => (
-                  <div key={index} className="availability-item">
-                    <div className="section-header">
+                  <div key={index} className={styles.availabilityItem}>
+                    <div className={styles.sectionHeader}>
                       <h3>Kỳ {index + 1}</h3>
                       {index > 0 && (
-                        <button type="button" className="btn-delete" onClick={() => removeAvailability(index)}>
+                        <button type="button" className={styles.btnDelete} onClick={() => removeAvailability(index)}>
                           <i className="material-icons">delete</i>
                         </button>
                       )}
                     </div>
-                    <div className="date-inputs">
-                      <div className="form-group">
+                    <div className={styles.dateInputs}>
+                      <div className={styles.formGroup}>
                         <label>Ngày bắt đầu</label>
                         <input
                           type="date"
                           value={period.start_date || ''}
                           onChange={(e) => handleAvailabilityChange(index, 'start_date', e.target.value)}
-                          className={errors[`availability_${index}`] ? 'error-input' : ''}
+                          className={errors[`availability_${index}`] ? styles.errorInput : ''}
                         />
                       </div>
-                      <div className="form-group">
+                      <div className={styles.formGroup}>
                         <label>Ngày kết thúc</label>
                         <input
                           type="date"
                           value={period.end_date || ''}
                           onChange={(e) => handleAvailabilityChange(index, 'end_date', e.target.value)}
-                          className={errors[`availability_${index}`] ? 'error-input' : ''}
+                          className={errors[`availability_${index}`] ? styles.errorInput : ''}
                         />
                       </div>
                     </div>
                     {errors[`availability_${index}`] && (
-                      <p className="error-text">{errors[`availability_${index}`]}</p>
+                      <p className={styles.errorText}>{errors[`availability_${index}`]}</p>
                     )}
                   </div>
                 ))}
-                <button type="button" className="btn-add" onClick={addAvailability}>
+                <button type="button" className={styles.btnAdd} onClick={addAvailability}>
                   <i className="material-icons">add</i>
                 </button>
               </div>
 
-              <div className="form-section">
+              <div className={styles.formSection}>
                 <h2>Địa chỉ cho thuê</h2>
                 {formData.locations.map((location, index) => (
-                  <div key={index} className="location-item">
-                    <div className="section-header">
+                  <div key={index} className={styles.locationItem}>
+                    <div className={styles.sectionHeader}>
                       <h3>Địa chỉ {index + 1}</h3>
                       {index > 0 && (
-                        <button type="button" className="btn-delete" onClick={() => removeLocation(index)}>
-                          <i className="delete-icon"></i>
+                        <button type="button" className={styles.btnDelete} onClick={() => removeLocation(index)}>
+                          <i className={styles.deleteIcon}></i>
                         </button>
                       )}
                     </div>
-                    <div className="location-inputs">
-                      <div className="form-group">
+                    <div className={styles.locationInputs}>
+                      <div className={styles.formGroup}>
                         <label>Tỉnh/Thành</label>
                         <select
                           value={location.province}
                           onChange={(e) => handleLocationChange(index, 'province', e.target.value)}
-                          className={errors[`location_${index}`] ? 'error-input' : ''}
+                          className={errors[`location_${index}`] ? styles.errorInput : ''}
                         >
                           <option value="">Chọn tỉnh/thành</option>
                           {provinces.map(province => (
@@ -678,39 +686,39 @@ const PostPage = () => {
                           ))}
                         </select>
                       </div>
-                      <div className="form-group">
+                      <div className={styles.formGroup}>
                         <label>Quận/Huyện</label>
                         <input
                           type="text"
                           value={location.district}
                           onChange={(e) => handleLocationChange(index, 'district', e.target.value)}
-                          className={errors[`location_${index}`] ? 'error-input' : ''}
+                          className={errors[`location_${index}`] ? styles.errorInput : ''}
                         />
                       </div>
                     </div>
-                    <div className="form-group">
+                    <div className={styles.formGroup}>
                       <label>Địa chỉ chi tiết</label>
                       <input
                         type="text"
                         value={location.location_detail}
                         onChange={(e) => handleLocationChange(index, 'location_detail', e.target.value)}
-                        className={errors[`location_${index}`] ? 'error-input' : ''}
+                        className={errors[`location_${index}`] ? styles.errorInput : ''}
                       />
                     </div>
                     {errors[`location_${index}`] && (
-                      <p className="error-text">{errors[`location_${index}`]}</p>
+                      <p className={styles.errorText}>{errors[`location_${index}`]}</p>
                     )}
                   </div>
                 ))}
-                <button type="button" className="btn-add" onClick={addLocation}>
+                <button type="button" className={styles.btnAdd} onClick={addLocation}>
                   <i className="material-icons">add</i>
                 </button>
               </div>
 
-              <div className="form-actions-back">
+              <div className={styles.formActionsBack}>
                 <button 
                   type="button" 
-                  className="btn-back" 
+                  className={styles.btnBack} 
                   onClick={handlePreviousStep}
                   disabled={loading}
                   style={{ 
@@ -723,7 +731,7 @@ const PostPage = () => {
               </div>
               <button 
                 type="submit" 
-                className="btn-submit"
+                className={styles.btnSubmit}
                 disabled={loading}
                 style={{ 
                   opacity: loading ? 0.7 : 1,
@@ -737,6 +745,8 @@ const PostPage = () => {
         </form>
       </div>
     </div>
+    <Footer />
+    </>
   );
 };
 

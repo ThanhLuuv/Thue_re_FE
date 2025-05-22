@@ -2,8 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import apiService from '../services/apiService';
-import tokenService from '../services/tokenService';
+import apiService from '../../services/apiService';
+import tokenService from '../../services/tokenService';
 import './Login.css';
 
 const Login = () => {
