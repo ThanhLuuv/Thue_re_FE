@@ -1,0 +1,62 @@
+.error-display {
+  display: flex;
+  align-items: flex-start;
+  padding: 16px;
+  margin: 16px 0;
+  border-radius: 8px;
+  background-color: #fff;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.error-icon {
+  font-size: 24px;
+  margin-right: 16px;
+  padding: 8px;
+  border-radius: 50%;
+  background-color: #f5f5f5;
+}
+
+.error-content {
+  flex: 1;
+}
+
+.error-content h3 {
+  margin: 0 0 8px 0;
+  color: #d32f2f;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.error-details {
+  color: #666;
+  font-size: 14px;
+}
+
+.error-details p {
+  margin: 4px 0;
+}
+
+/* Styles cho các loại lỗi khác nhau */
+.error-display[data-type="NETWORK_ERROR"] {
+  border-left: 4px solid #2196f3;
+}
+
+.error-display[data-type="SERVER_ERROR"] {
+  border-left: 4px solid #f44336;
+}
+
+.error-display[data-type="VALIDATION_ERROR"] {
+  border-left: 4px solid #ff9800;
+}
+
+.error-display[data-type="AUTH_ERROR"] {
+  border-left: 4px solid #9c27b0;
+}
+
+.error-display[data-type="NOT_FOUND"] {
+  border-left: 4px solid #607d8b;
+}
+
+.error-display[data-type="UNKNOWN_ERROR"] {
+  border-left: 4px solid #757575;
+} 
