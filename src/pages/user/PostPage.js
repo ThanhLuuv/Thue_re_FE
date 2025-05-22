@@ -155,11 +155,12 @@ const PostPage = () => {
 
         const result = await apiService.createItem(formData);
         if(result?.success) {
-          console.log('Đăng tin thành công');
-           handleApiError(result);
-          // setTimeout(() => {
-          //   window.location.reload();
-          // }, 1500); // Wait for 1.5 seconds to show success message
+          toast.success('Đăng tin thành công');
+          setTimeout(() => {
+            window.location.reload();
+          }, 1500); // Wait for 1.5 seconds to show success message
+        }else{
+          handleApiError(result);
         }
       } catch (error) {
         console.error('Error creating item:', error);

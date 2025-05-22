@@ -1,5 +1,5 @@
 /* Google Material Icons */
-@import url('https://fonts.googleapis.com/icon?family=Material+Icons+Outlined');
+@import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0');
 
 /* Reset and Base Styles */
 .styledBoxHome {
@@ -129,8 +129,9 @@
   margin-bottom: 5px;
 }
 
-.categoryIcon .material-icons {
+.categoryIcon .material-symbols-outlined {
   color: #6699CC;
+  font-size: 24px;
 }
 
 .categoryName {
@@ -303,7 +304,7 @@
   color: #000;
 }
 
-.iconButton .material-icons {
+.iconButton .material-symbols-outlined {
   font-size: 24px;
 }
 
