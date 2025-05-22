@@ -2,80 +2,9 @@ import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import {
-  Box,
-  Container,
-  TextField,
-  Button,
-  Typography,
-  Paper,
-  Link as MuiLink,
-  CircularProgress,
-  Alert,
-  Stack
-} from '@mui/material';
-import { styled } from '@mui/material/styles';
 import PersonAddOutlinedIcon from '@mui/icons-material/PersonAddOutlined';
 import apiService from '../../services/apiService';
-
-const StyledPaper = styled(Paper)(({ theme }) => ({
-  padding: theme.spacing(4),
-  display: 'flex',
-  flexDirection: 'column',
-  alignItems: 'center',
-  maxWidth: 400,
-  width: '100%',
-  margin: '12px auto',
-  borderRadius: 20,
-  boxShadow: '0 10px 30px rgba(0, 0, 0, 0.1)',
-}));
-
-const StyledForm = styled('form')(({ theme }) => ({
-  width: '100%',
-  marginTop: theme.spacing(3),
-}));
-
-const StyledTextField = styled(TextField)(({ theme }) => ({
-  '& .MuiOutlinedInput-root': {
-    height: '40px',
-    fontSize: '14px',
-    '& fieldset': {
-      borderColor: '#99CCFF',
-    },
-    '&:hover fieldset': {
-      borderColor: '#6699CC', 
-    },
-    '&.Mui-focused fieldset': {
-      borderColor: '#6699CC',
-    },
-    '& .MuiOutlinedInput-input': {
-      padding: '8px 14px',
-    },
-  },
-  '& .MuiInputLabel-root': {
-    color: '#6699CC',
-    fontSize: '14px',
-    transform: 'translate(14px, 8px)',
-    '&.MuiInputLabel-shrink': {
-      transform: 'translate(14px, -6px) scale(0.75)',
-    }
-  },
-  '& .MuiInputLabel-root.Mui-focused': {
-    color: '#6699CC',
-  },
-}));
-
-const StyledButton = styled(Button)(({ theme }) => ({
-  marginTop: theme.spacing(2),
-  backgroundColor: '#99CCFF',
-  color: 'white',
-  '&:hover': {
-    backgroundColor: '#6699CC',
-  },
-  '&.Mui-disabled': {
-    backgroundColor: '#ccc',
-  },
-}));
+import styles from './Register.module.css';
 
 function Register() {
   const navigate = useNavigate();
@@ -210,7 +139,7 @@ function Register() {
   };
 
   return (
-    <Container component="main" maxWidth="sm">
+    <div className={styles.container}>
       <ToastContainer
         position="top-right"
         autoClose={3000}
@@ -249,54 +178,41 @@ function Register() {
           height: '100%'
         }}
       />
-      <Box
-        sx={{
-          minHeight: '100vh',
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-          justifyContent: 'center',
-          py: 4,
-          backgroundImage: 'url("/img/bg.png")',
-          backgroundSize: 'cover',
-          backgroundPosition: 'center',
-          backgroundRepeat: 'no-repeat',
-        }}
-      >
-        <StyledPaper elevation={3}>
-          <PersonAddOutlinedIcon sx={{ fontSize: 40, color: '#6699CC', mb: 2 }} />
-          <Typography component="h1" variant="h5" sx={{ mb: 3 }}>
-            Đăng ký tài khoản
-          </Typography>
+      <main className={styles.main}>
+        <div className={styles.paper}>
+          <PersonAddOutlinedIcon className={styles.icon} />
+          <h1 className={styles.title}>Đăng ký tài khoản</h1>
           {!showVerification ? (
-            <StyledForm onSubmit={handleSubmit}>
-              <Stack spacing={2}>
-                <StyledTextField
-                  fullWidth
-                  label="Họ và tên"
+            <form className={styles.form} onSubmit={handleSubmit}>
+              <div className={styles.formGroup}>
+                <input
+                  className={`${styles.input} ${errors.fullName ? styles.error : ''}`}
+                  type="text"
                   name="fullName"
                   value={formData.fullName}
                   onChange={handleChange}
-                  error={!!errors.fullName}
-                  helperText={errors.fullName}
+                  placeholder="Họ và tên"
                 />
-                <StyledTextField
-                  fullWidth
-                  label="Email"
+                {errors.fullName && <div className={styles.errorText}>{errors.fullName}</div>}
+              </div>
+
+              <div className={styles.formGroup}>
+                <input
+                  className={`${styles.input} ${errors.email ? styles.error : ''}`}
+                  type="email"
                   name="email"
                   value={formData.email}
                   onChange={handleChange}
-                  error={!!errors.email}
-                  helperText={errors.email}
-                  slotProps={{
-                    input: {
-                      pattern: "[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$"
-                    }
-                  }}
+                  placeholder="Email"
+                  pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$"
                 />
-                <StyledTextField
-                  fullWidth
-                  label="Số điện thoại" 
+                {errors.email && <div className={styles.errorText}>{errors.email}</div>}
+              </div>
+
+              <div className={styles.formGroup}>
+                <input
+                  className={`${styles.input} ${errors.phone ? styles.error : ''}`}
+                  type="tel"
                   name="phone"
                   value={formData.phone}
                   onChange={(e) => {
@@ -305,82 +221,85 @@ function Register() {
                       handleChange(e);
                     }
                   }}
-                  error={!!errors.phone}
-                  helperText={errors.phone}
-                  slotProps={{
-                    input: {
-                      inputMode: 'numeric',
-                      pattern: '^(0[0-9]{9})$',
-                      maxLength: 10
-                    }
-                  }}
+                  placeholder="Số điện thoại"
+                  inputMode="numeric"
+                  pattern="^(0[0-9]{9})$"
+                  maxLength={10}
                 />
-                <StyledTextField
-                  fullWidth
-                  label="Mật khẩu"
-                  name="password"
+                {errors.phone && <div className={styles.errorText}>{errors.phone}</div>}
+              </div>
+
+              <div className={styles.formGroup}>
+                <input
+                  className={`${styles.input} ${errors.password ? styles.error : ''}`}
                   type="password"
+                  name="password"
                   value={formData.password}
                   onChange={handleChange}
-                  error={!!errors.password}
-                  helperText={errors.password}
+                  placeholder="Mật khẩu"
                 />
-                <StyledTextField
-                  fullWidth
-                  label="Nhập lại mật khẩu"
-                  name="confirmPassword"
+                {errors.password && <div className={styles.errorText}>{errors.password}</div>}
+              </div>
+
+              <div className={styles.formGroup}>
+                <input
+                  className={`${styles.input} ${errors.confirmPassword ? styles.error : ''}`}
                   type="password"
+                  name="confirmPassword"
                   value={formData.confirmPassword}
                   onChange={handleChange}
-                  error={!!errors.confirmPassword}
-                  helperText={errors.confirmPassword}
+                  placeholder="Nhập lại mật khẩu"
                 />
-                <StyledButton
-                  type="submit"
-                  fullWidth
-                  variant="contained"
-                  disabled={loading}
-                >
-                  {loading ? <CircularProgress size={24} color="inherit" /> : 'Đăng ký'}
-                </StyledButton>
-              </Stack>
-            </StyledForm>
+                {errors.confirmPassword && <div className={styles.errorText}>{errors.confirmPassword}</div>}
+              </div>
+
+              <button
+                type="submit"
+                className={styles.button}
+                disabled={loading}
+              >
+                {loading ? <div className={styles.spinner} /> : 'Đăng ký'}
+              </button>
+            </form>
           ) : (
-            <StyledForm onSubmit={handleVerification}>
-              <Stack spacing={2}>
-                <Typography variant="body2" sx={{ textAlign: 'center' }}>
+            <form className={styles.form} onSubmit={handleVerification}>
+              <div className={styles.formGroup}>
+                <p className={styles.message}>
                   Chúng tôi đã gửi mã xác thực tới email của bạn. Vui lòng kiểm tra và nhập mã dưới đây.
-                </Typography>
-                <StyledTextField
-                  fullWidth
-                  label="Mã xác thực"
-                  name="verificationCode"
-                  value={formData.verificationCode}
-                  onChange={handleChange}
-                  inputProps={{ maxLength: 6 }}
-                  error={!!errors.verificationCode}
-                  helperText={errors.verificationCode}
-                />
-                <StyledButton
+                </p>
+                <div className={styles.inputGroup}>
+                  <input
+                    className={`${styles.input} ${errors.verificationCode ? styles.error : ''}`}
+                    type="text"
+                    name="verificationCode"
+                    value={formData.verificationCode}
+                    onChange={handleChange}
+                    placeholder=" "
+                    maxLength={6}
+                  />
+                  <label className={styles.label}>Mã xác thực</label>
+                  {errors.verificationCode && <div className={styles.errorText}>{errors.verificationCode}</div>}
+                </div>
+
+                <button
                   type="submit"
-                  fullWidth
-                  variant="contained"
+                  className={styles.button}
                   disabled={loading}
                 >
-                  {loading ? <CircularProgress size={24} color="inherit" /> : 'Xác thực'}
-                </StyledButton>
-              </Stack>
-            </StyledForm>
+                  {loading ? <div className={styles.spinner} /> : 'Xác thực'}
+                </button>
+              </div>
+            </form>
           )}
-          <Typography variant="body2" sx={{ mt: 2, textAlign: 'center' }}>
+          <p className={styles.message}>
             Đã có tài khoản?{' '}
-            <MuiLink component={Link} to="/login" sx={{ color: '#99CCFF' }}>
+            <Link to="/login" className={styles.link}>
               Đăng nhập
-            </MuiLink>
-          </Typography>
-        </StyledPaper>
-      </Box>
-    </Container>
+            </Link>
+          </p>
+        </div>
+      </main>
+    </div>
   );
 }
 

@@ -1,0 +1,147 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap');
+
+.container {
+  max-width: 600px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 0 16px;
+  font-family: 'Roboto', sans-serif;
+}
+
+.main {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 32px 0;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+.paper {
+  padding: 32px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 60%;
+  margin: 12px auto;
+  border-radius: 20px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  background-color: white;
+}
+
+.icon {
+  font-size: 40px;
+  color: #6699CC;
+  margin-bottom: 16px;
+}
+
+.title {
+  font-size: 1.5rem;
+  font-weight: 500;
+  margin-bottom: 24px;
+  color: #333;
+}
+
+.form {
+  width: 100%;
+  margin-top: 24px;
+}
+
+.formGroup {
+  margin-bottom: 16px;
+  width: 100%;
+}
+
+.input {
+  width: 100%;
+  height: 40px;
+  padding: 8px 14px;
+  font-size: 14px;
+  border: 1px solid #99CCFF;
+  border-radius: 4px;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.input:focus {
+  border-color: #6699CC;
+}
+
+.input::placeholder {
+  color: #6699CC;
+  font-size: 14px;
+}
+
+.input.error {
+  border-color: #ff4d4f;
+}
+
+.errorText {
+  color: #ff4d4f;
+  font-size: 10px;
+  margin-top: 4px;
+  display: block;
+}
+
+.button {
+  width: 100%;
+  height: 40px;
+  margin-top: 16px;
+  background-color: #99CCFF;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.button:hover {
+  background-color: #6699CC;
+}
+
+.button:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+.spinner {
+  width: 24px;
+  height: 24px;
+  border: 2px solid #ffffff;
+  border-top: 2px solid transparent;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin: 0 auto;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.message {
+  margin-top: 16px;
+  text-align: center;
+  font-size: 14px;
+  color: #666;
+}
+
+.link {
+  color: #99CCFF;
+  text-decoration: none;
+}
+
+.link:hover {
+  color: #6699CC;
+}
+
+@media (max-width: 600px) {
+  .paper {
+    margin: 12px;
+    padding: 24px;
+  }
+} 

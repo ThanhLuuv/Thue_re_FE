@@ -4,10 +4,12 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import apiService from '../../services/apiService';
 import tokenService from '../../services/tokenService';
+import { useErrorHandler } from '../../services/errorService';
 import './Login.css';
 
 const Login = () => {
   const navigate = useNavigate();
+  const { handleApiError } = useErrorHandler();
   const [formData, setFormData] = useState({
     email: '',
     password: ''
@@ -60,8 +62,6 @@ const Login = () => {
     setIsLoading(true);
     try {
       const result = await apiService.login(formData);
-      console.log('Login response:', result);
-      console.log('Response data:', result.data);
 
       if (result?.success && result?.data?.token) {
         setErrors({});
@@ -70,49 +70,18 @@ const Login = () => {
         const role = result.data.user.roles[0]? result.data.user.roles[0].toLowerCase() : 'user';
         navigate(role === 'admin' ? '/admin' : '/');
       } else {
-        console.error('Invalid response structure:', result);
-        setErrors({ form: 'Email hoặc mật khẩu không đúng' });
+        const errorMessage = handleApiError(result);
+        const errorText = typeof errorMessage === 'object' 
+          ? (errorMessage.message || errorMessage.details || 'Đã xảy ra lỗi')
+          : errorMessage;
+        setErrors({ form: errorText });
       }
     } catch (error) {
-      console.error('Login error:', error);
-      if (error.message === 'Network Error') {
-        toast.error('Lỗi kết nối máy chủ. Vui lòng kiểm tra kết nối mạng.', {
-          position: "top-right",
-          autoClose: 3000,
-          hideProgressBar: true,
-          closeOnClick: true,
-          pauseOnHover: false,
-          draggable: false,
-          closeButton: false,
-          style: {
-            background: 'white',
-            color: '#333',
-            fontSize: '12px',
-            padding: '8px 12px',
-            borderRadius: '4px',
-            boxShadow: '0 2px 8px rgba(0,0,0,0.15)',
-            maxWidth: '300px',
-            borderLeft: '4px solid #ff4d4f',
-            lineHeight: '1.2',
-            minHeight: 'auto',
-            display: 'flex',
-            justifyContent: 'center',
-            alignItems: 'center',
-            height: '100%',
-            cursor: 'pointer'
-          },
-          bodyStyle: {
-            margin: 0,
-            padding: 0,
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            height: '100%'
-          }
-        });
-      } else {
-        setErrors({ form: 'Email hoặc mật khẩu không đúng' });
-      }
+      const errorMessage = handleApiError(error);
+      const errorText = typeof errorMessage === 'object' 
+        ? (errorMessage.message || errorMessage.details || 'Đã xảy ra lỗi')
+        : errorMessage;
+      setErrors({ form: errorText });
     } finally {
       setIsLoading(false);
     }
@@ -217,4 +186,4 @@ const Login = () => {
   );
 };
 
-export default Login; 
+export default Login;
