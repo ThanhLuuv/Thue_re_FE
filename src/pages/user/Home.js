@@ -241,9 +241,9 @@ const Home = () => {
               }}
             >
               <div className={styles.categoryIcon}>
-                <span className="material-icons">{category.icon || 'border_clear'}</span>
+                <span className="material-symbols-outlined">{category.icon || 'border_clear'}</span>
               </div>
-              <span className={styles.categoryName}>{category.category_name}</span>
+              <span className={styles.categoryName} >{category.category_name}</span>
             </a>
           ))
         ) : (
