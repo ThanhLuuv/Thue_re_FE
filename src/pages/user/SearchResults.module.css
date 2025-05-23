@@ -260,28 +260,29 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: rgba(0, 0, 0, 0.5);
+  background: rgba(0, 0, 0, 0.5);
   display: flex;
-  justify-content: center;
   align-items: center;
+  justify-content: center;
   z-index: 1000;
-  backdrop-filter: blur(4px);
+  padding: 16px;
 }
 
 .modalContent {
-  background-color: white;
-  border-radius: 12px;
-  width: 35%;
-  min-width: 280px;
-  max-width: 360px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
-  animation: modalFadeIn 0.3s ease;
+  background: white;
+  border-radius: 8px;
+  width: 100%;
+  max-width: 500px;
+  max-height: 90vh;
+  overflow-y: auto;
+  position: relative;
+  animation: modalFadeIn 0.2s ease-out;
 }
 
 @keyframes modalFadeIn {
   from {
     opacity: 0;
-    transform: translateY(-20px);
+    transform: translateY(20px);
   }
   to {
     opacity: 1;
@@ -290,35 +291,36 @@
 }
 
 .modalHeader {
-  padding: 14px 16px;
+  padding: 16px;
   border-bottom: 1px solid #eee;
   display: flex;
-  justify-content: space-between;
   align-items: center;
+  justify-content: space-between;
+  position: sticky;
+  top: 0;
+  background: white;
+  z-index: 1;
 }
 
 .modalTitle {
-  font-size: 1rem;
+  margin: 0;
+  font-size: 18px;
   font-weight: 600;
   color: #333;
-  margin: 0;
 }
 
 .modalClose {
   background: none;
   border: none;
-  cursor: pointer;
   padding: 8px;
+  cursor: pointer;
   color: #666;
-  border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: all 0.2s ease;
 }
 
 .modalClose:hover {
-  background-color: #f5f5f5;
   color: #333;
 }
 
@@ -392,46 +394,103 @@
 }
 
 .modalFooter {
-  padding: 14px 16px;
+  padding: 16px;
   border-top: 1px solid #eee;
   display: flex;
+  gap: 12px;
   justify-content: flex-end;
-  gap: 8px;
+  position: sticky;
+  bottom: 0;
+  background: white;
 }
 
 .modalButton {
-  padding: 6px 12px;
+  padding: 8px 16px;
   border-radius: 6px;
-  cursor: pointer;
+  font-size: 14px;
   font-weight: 500;
-  font-size: 13px;
-  transition: all 0.2s ease;
-  min-width: 80px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s;
 }
 
 .modalButtonOutline {
+  background: white;
   border: 1px solid #ddd;
-  background: none;
   color: #666;
 }
 
 .modalButtonOutline:hover {
-  border-color: #FF6700;
-  color: #FF6700;
+  background: #f5f5f5;
 }
 
 .modalButtonPrimary {
-  background-color: #FF6700;
-  color: white;
+  background: #FF6700;
   border: none;
+  color: white;
 }
 
 .modalButtonPrimary:hover {
-  background-color: #FF6700;
-  opacity: 0.9;
+  background: #e55c00;
+}
+
+@media (max-width: 768px) {
+  .modal {
+    padding: 12px;
+  }
+
+  .modalContent {
+    max-width: 100%;
+    margin: 0;
+    border-radius: 8px;
+  }
+
+  .modalHeader {
+    padding: 12px;
+  }
+
+  .modalTitle {
+    font-size: 16px;
+  }
+
+  .modalBody {
+    padding: 12px;
+  }
+
+  .modalFooter {
+    padding: 12px;
+  }
+
+  .modalButton {
+    padding: 8px 12px;
+    font-size: 13px;
+  }
+}
+
+@media (max-width: 480px) {
+  .modal {
+    padding: 8px;
+  }
+
+  .modalHeader {
+    padding: 10px;
+  }
+
+  .modalTitle {
+    font-size: 15px;
+  }
+
+  .modalBody {
+    padding: 10px;
+  }
+
+  .modalFooter {
+    padding: 10px;
+  }
+
+  .modalButton {
+    padding: 7px 10px;
+    font-size: 12px;
+  }
 }
 
 .pagination {

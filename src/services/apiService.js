@@ -284,6 +284,36 @@ const apiService = {
       };
     }
   },
+  updateAvatar: async (data) => {
+    try {
+      const token = localStorage.getItem('token');
+      return await axiosInstance.post('/user-image/update-avatar', data,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        }
+      );
+    } catch (error) { 
+      console.error('Error updating avatar:', error);
+      throw error;
+    }
+  },
+  updateName: async (data) => {
+    try {
+      const token = localStorage.getItem('token');
+      return await axiosInstance.post('/auth/profile/name', data,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`
+          } 
+        }
+      );
+    } catch (error) {
+      console.error('Error updating name:', error);
+      throw error;
+    }
+  }
 };
 
 export default apiService; 

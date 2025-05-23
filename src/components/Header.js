@@ -502,7 +502,13 @@ const HeaderComponent = ({ onSearch, onLocationChange, selectedLocation }) => {
                   />
                 </Box>
                 <Box>
-                  <Box sx={{ fontWeight: 'bold' }}>{username || 'Người dùng'}</Box>
+                  <Box sx={{ fontWeight: 'bold' }}> 
+                    <Link to="/my-profile" onClick={() => {
+                      window.location.href = '/my-profile';
+                    }} style={{textDecoration: 'none', color: 'inherit', marginLeft: '5px'}}>
+                      {username || 'Người dùng'}
+                    </Link>
+                  </Box>
                   <Box sx={{ fontSize: '12px', color: '#777' }}>0.0 ⭐⭐⭐⭐⭐</Box>
                 </Box>
               </Box>

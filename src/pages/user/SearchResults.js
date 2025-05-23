@@ -33,7 +33,7 @@ const SearchResults = () => {
     highprice: ''
   });
   const [openPriceModal, setOpenPriceModal] = useState(false);
-  const [tempPriceRange, setTempPriceRange] = useState([0, 100000000]);
+  const [tempPriceRange, setTempPriceRange] = useState([0, 10000000]);
   
   const { handleApiError } = useErrorHandler();
   const urlQuery = useQuery();
@@ -221,7 +221,7 @@ const SearchResults = () => {
   const handleOpenPriceModal = () => {
     // Thiết lập giá trị ban đầu dựa trên searchParams hiện tại
     const lowPrice = searchParams.lowprice ? Number(searchParams.lowprice) : 0;
-    const highPrice = searchParams.highprice ? Number(searchParams.highprice) : 100000000;
+    const highPrice = searchParams.highprice ? Number(searchParams.highprice) : 10000000;
     setTempPriceRange([lowPrice, highPrice]);
     setOpenPriceModal(true);
   };
@@ -250,7 +250,7 @@ const SearchResults = () => {
       lowprice: '',
       highprice: ''
     };
-    setTempPriceRange([0, 100000000]);
+    setTempPriceRange([0, 10000000]);
     setSearchParams(newParams);
     setPage(1);
     setOpenPriceModal(false);

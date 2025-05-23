@@ -127,6 +127,7 @@ const ProfilePage = () => {
             { method: 'POST', body: formData, headers: { 'X-Requested-With': 'XMLHttpRequest' } }
           );
           if (!response.ok) {
+            console.log("response", response);
             const errorData = await response.json();
             throw new Error(errorData.error?.message || 'Upload failed');
           }
@@ -134,7 +135,8 @@ const ProfilePage = () => {
           const avatarUrl = data.secure_url;
 
           // Cập nhật avatar
-          const result = await apiService.updateProfile({ avatar: avatarUrl });
+          const result = await apiService.updateAvatar({ avatar: avatarUrl });
+          console.log("result", result);
           if (result.success) {
             toast.success('Cập nhật ảnh đại diện thành công!');
             setUserInfo(prev => ({ ...prev, avatar: avatarUrl }));
@@ -169,7 +171,7 @@ const ProfilePage = () => {
     }
     try {
       setEditLoading(true);
-      const result = await apiService.updateProfile({ full_name: editNameValue });
+      const result = await apiService.updateName({ full_name: editNameValue });
       if (result.success) {
         toast.success('Cập nhật tên thành công!');
         setUserInfo(prev => ({ ...prev, full_name: editNameValue }));
