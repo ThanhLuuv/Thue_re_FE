@@ -221,7 +221,56 @@
 
 @media (max-width: 600px) {
   .login-paper {
+    width: 90%;
+    padding: 20px;
     margin: 12px;
-    padding: 24px;
+  }
+
+  .login-title {
+    font-size: 1.3rem;
+    margin-bottom: 20px;
+  }
+
+  .form-input {
+    height: 36px;
+    font-size: 13px;
+  }
+
+  .login-button {
+    height: 36px;
+    font-size: 13px;
+  }
+
+  .forgot-password-link,
+  .register-link {
+    font-size: 13px;
+  }
+
+  .lock-icon {
+    font-size: 32px;
+    margin-bottom: 12px;
+  }
+
+  .error-text {
+    font-size: 9px;
+  }
+
+  .form-error {
+    font-size: 11px;
+  }
+}
+
+@media (max-width: 360px) {
+  .login-paper {
+    width: 95%;
+    padding: 16px;
+  }
+
+  .login-title {
+    font-size: 1.2rem;
+  }
+
+  .form-group {
+    margin-bottom: 12px;
   }
 } 

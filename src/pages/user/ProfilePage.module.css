@@ -489,4 +489,244 @@
   font-size: 18px;
   font-weight: 500;
   margin: 12px 0;
+}
+
+@media (max-width: 768px) {
+  .profileContainer {
+    width: 95%;
+    margin-top: 60px;
+    margin-bottom: 20px;
+  }
+
+  .profileSidebar {
+    padding: 20px 12px;
+  }
+
+  .avatarWrapper {
+    width: 70px;
+    height: 70px;
+  }
+
+  .avatar,
+  .avatarIcon {
+    width: 70px;
+    height: 70px;
+  }
+
+  .avatarIcon i {
+    font-size: 56px;
+  }
+
+  .avatarCamera {
+    width: 24px;
+    height: 24px;
+  }
+
+  .avatarCamera i {
+    font-size: 14px;
+  }
+
+  .profileName {
+    font-size: 15px;
+  }
+
+  .profileRating {
+    font-size: 11px;
+  }
+
+  .iconBtn {
+    width: 28px;
+    height: 28px;
+  }
+
+  .iconBtn i {
+    font-size: 16px;
+  }
+
+  .profileMeta {
+    font-size: 11px;
+  }
+
+  .profileMeta i.material-icons {
+    font-size: 14px;
+  }
+
+  .profileContent {
+    padding: 16px 12px;
+  }
+
+  .tabs {
+    gap: 20px;
+  }
+
+  .tab, .tabActive {
+    font-size: 14px;
+  }
+
+  .postList {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  .postItem {
+    padding: 12px;
+  }
+
+  .postImage {
+    width: 100px;
+    height: 75px;
+    margin-right: 12px;
+  }
+
+  .postInfo h3 {
+    font-size: 14px;
+  }
+
+  .postInfo .price {
+    font-size: 13px;
+  }
+
+  .postInfo .description {
+    font-size: 12px;
+  }
+
+  .menuButton {
+    padding: 6px;
+  }
+
+  .menuDropdown {
+    min-width: 140px;
+  }
+
+  .menuDropdown button {
+    padding: 6px 12px;
+    font-size: 13px;
+  }
+
+  .menuDropdown button i {
+    font-size: 16px;
+  }
+}
+
+@media (max-width: 480px) {
+  .profileContainer {
+    width: 100%;
+    margin-top: 50px;
+    border-radius: 0;
+  }
+
+  .profileSidebar {
+    padding: 16px 10px;
+  }
+
+  .avatarWrapper {
+    width: 60px;
+    height: 60px;
+  }
+
+  .avatar,
+  .avatarIcon {
+    width: 60px;
+    height: 60px;
+  }
+
+  .avatarIcon i {
+    font-size: 48px;
+  }
+
+  .avatarCamera {
+    width: 22px;
+    height: 22px;
+  }
+
+  .avatarCamera i {
+    font-size: 12px;
+  }
+
+  .profileName {
+    font-size: 14px;
+  }
+
+  .profileRating {
+    font-size: 10px;
+  }
+
+  .iconBtn {
+    width: 26px;
+    height: 26px;
+  }
+
+  .iconBtn i {
+    font-size: 14px;
+  }
+
+  .profileMeta {
+    font-size: 10px;
+  }
+
+  .profileMeta i.material-icons {
+    font-size: 13px;
+  }
+
+  .profileContent {
+    padding: 12px 8px;
+  }
+
+  .tabs {
+    gap: 16px;
+  }
+
+  .tab, .tabActive {
+    font-size: 13px;
+  }
+
+  .postItem {
+    padding: 10px;
+  }
+
+  .postImage {
+    width: 90px;
+    height: 68px;
+    margin-right: 10px;
+  }
+
+  .postInfo h3 {
+    font-size: 13px;
+  }
+
+  .postInfo .price {
+    font-size: 12px;
+  }
+
+  .postInfo .description {
+    font-size: 11px;
+  }
+
+  .menuButton {
+    padding: 4px;
+  }
+
+  .menuDropdown {
+    min-width: 130px;
+  }
+
+  .menuDropdown button {
+    padding: 5px 10px;
+    font-size: 12px;
+  }
+
+  .menuDropdown button i {
+    font-size: 14px;
+  }
+
+  .modalContent {
+    padding: 20px 16px;
+    width: 95%;
+    margin: 0 10px;
+  }
+
+  .nameEditInput {
+    font-size: 14px;
+    padding: 3px 6px;
+  }
 } 

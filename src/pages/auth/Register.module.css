@@ -141,7 +141,51 @@
 
 @media (max-width: 600px) {
   .paper {
+    width: 90%;
+    padding: 20px;
     margin: 12px;
-    padding: 24px;
+  }
+
+  .title {
+    font-size: 1.3rem;
+    margin-bottom: 20px;
+  }
+
+  .input {
+    height: 36px;
+    font-size: 13px;
+  }
+
+  .button {
+    height: 36px;
+    font-size: 13px;
+  }
+
+  .message {
+    font-size: 13px;
+  }
+
+  .icon {
+    font-size: 32px;
+    margin-bottom: 12px;
+  }
+
+  .errorText {
+    font-size: 9px;
+  }
+}
+
+@media (max-width: 360px) {
+  .paper {
+    width: 95%;
+    padding: 16px;
+  }
+
+  .title {
+    font-size: 1.2rem;
+  }
+
+  .formGroup {
+    margin-bottom: 12px;
   }
 } 

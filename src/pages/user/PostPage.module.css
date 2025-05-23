@@ -461,12 +461,178 @@
 
 /* Responsive */
 @media (max-width: 768px) {
+  .container {
+    padding: 16px;
+    margin-top: 40px;
+  }
+
+  .postForm {
+    width: 95%;
+    padding: 20px;
+  }
+
+  .formTitle {
+    font-size: 16px;
+  }
+
   .formStep {
     grid-template-columns: 1fr;
+    gap: 20px;
+  }
+
+  .formSection h2 {
+    font-size: 13px;
+  }
+
+  .formGroup label {
+    font-size: 13px;
+  }
+
+  .formGroup input,
+  .formGroup select,
+  .formGroup textarea {
+    font-size: 13px;
+  }
+
+  .formGroup textarea {
+    min-height: 60px;
+  }
+
+  .formRow {
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .locationInputs {
+    grid-template-columns: 1fr;
+    gap: 12px;
   }
 
   .dateInputs {
     grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  .imageList {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+  }
+
+  .imageItem {
+    aspect-ratio: 1;
+  }
+
+  .btnAdd,
+  .btnBack,
+  .btnNext,
+  .btnSubmit {
+    width: 32px;
+    height: 32px;
+  }
+
+  .btnSubmit {
+    width: auto;
+    padding: 0 12px;
+    font-size: 13px;
+  }
+
+  .errorText {
+    font-size: 9px;
+  }
+}
+
+@media (max-width: 480px) {
+  .container {
+    padding: 12px;
+  }
+
+  .postForm {
+    width: 100%;
+    padding: 16px;
+  }
+
+  .formTitle {
+    font-size: 15px;
+  }
+
+  .formSection {
+    margin-bottom: 16px;
+  }
+
+  .formSection h2 {
+    font-size: 12px;
+    margin-bottom: 8px;
+  }
+
+  .formGroup {
+    margin-bottom: 8px;
+  }
+
+  .formGroup label {
+    font-size: 12px;
+  }
+
+  .formGroup input,
+  .formGroup select,
+  .formGroup textarea {
+    font-size: 12px;
+    height: 32px;
+  }
+
+  .formGroup textarea {
+    min-height: 50px;
+  }
+
+  .imageList {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
+  }
+
+  .uploadButton {
+    width: 40px;
+    height: 40px;
+  }
+
+  .uploadButton i {
+    font-size: 20px;
+  }
+
+  .primaryBadge {
+    font-size: 10px;
+    padding: 2px 4px;
+  }
+
+  .setPrimaryBtn {
+    width: 20px;
+    height: 20px;
+  }
+
+  .availabilityItem,
+  .locationItem {
+    padding: 12px;
+    margin-bottom: 12px;
+  }
+
+  .sectionHeader h3 {
+    font-size: 12px;
+  }
+
+  .btnAdd {
+    width: 28px;
+    height: 28px;
+  }
+
+  .btnBack,
+  .btnNext,
+  .btnSubmit {
+    width: 28px;
+    height: 28px;
+  }
+
+  .btnSubmit {
+    width: auto;
+    padding: 0 10px;
+    font-size: 12px;
   }
 }
 

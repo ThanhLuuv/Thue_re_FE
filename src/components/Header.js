@@ -8,7 +8,13 @@ import {
   MenuItem,
   Link,
   Select,
-  InputBase
+  InputBase,
+  Drawer,
+  List,
+  ListItem,
+  ListItemIcon,
+  ListItemText,
+  Collapse
 } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import SearchIcon from '@mui/icons-material/Search';
@@ -24,6 +30,8 @@ import SavedSearchIcon from '@mui/icons-material/SavedSearch';
 import SettingsIcon from '@mui/icons-material/Settings';
 import HelpIcon from '@mui/icons-material/Help';
 import LogoutIcon from '@mui/icons-material/Logout';
+import MenuIcon from '@mui/icons-material/Menu';
+import CloseIcon from '@mui/icons-material/Close';
 import slogan from '../assets/img/slogan.png';
 import avatar from '../assets/img/avatar.png';
 import tokenService from '../services/tokenService';
@@ -36,7 +44,10 @@ const StyledAppBar = styled(AppBar)({
   right: 0,
   left: 0,
   top: 0,
-  zIndex: 10
+  zIndex: 10,
+  '@media (max-width: 480px)': {
+    padding: '0px 8px'
+  }
 });
 
 const MainToolbar = styled(Toolbar)({
@@ -44,9 +55,10 @@ const MainToolbar = styled(Toolbar)({
   alignItems: 'center',
   justifyContent: 'space-between',
   flexWrap: 'nowrap',
+  padding: '0 16px',
   '@media (max-width: 768px)': {
-    flexWrap: 'wrap',
-    gap: '10px'
+    padding: '0 8px',
+    justifyContent: 'space-between'
   }
 });
 
@@ -55,8 +67,17 @@ const Logo = styled(Box)({
   alignItems: 'center',
   color: 'white',
   '& img': {
-    height: '28px'
+    height: '28px',
+    '@media (max-width: 480px)': {
+      height: '24px'
+    }
   }
+});
+
+const RightSection = styled(Box)({
+  display: 'flex',
+  alignItems: 'center',
+  gap: '8px'
 });
 
 const SearchContainer = styled(Box)({
@@ -67,12 +88,24 @@ const SearchContainer = styled(Box)({
   height: '40px',
   position: 'relative',
   '@media (max-width: 768px)': {
-    order: 3,
-    marginTop: '10px',
-    width: '100%',
-    maxWidth: 'none',
-    marginLeft: 0,
-    marginRight: 0
+    display: 'none',
+    '&.show': {
+      display: 'flex',
+      position: 'absolute',
+      top: '100%',
+      left: 0,
+      right: 0,
+      backgroundColor: 'white',
+      zIndex: 1000,
+      boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
+      margin: 0,
+      padding: '8px',
+      maxWidth: 'none',
+      height: 'auto',
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: '4px'
+    }
   }
 });
 
@@ -88,6 +121,14 @@ const LocationDropdown = styled(Select)({
   cursor: 'pointer',
   minWidth: '200px',
   transition: 'border-color 0.3s ease',
+  '@media (max-width: 768px)': {
+    minWidth: '120px',
+    borderRadius: '20px',
+    '& .MuiSelect-select': {
+      padding: '6px 8px',
+      fontSize: '12px'
+    }
+  },
   '& .MuiSelect-select': {
     padding: '8px 14px',
     display: 'flex',
@@ -113,7 +154,13 @@ const LocationDropdown = styled(Select)({
 const SearchBox = styled(Box)({
   flex: 1,
   position: 'relative',
-  backgroundColor: 'white'
+  backgroundColor: 'white',
+  '@media (max-width: 768px)': {
+    flex: 1,
+    backgroundColor: '#f5f5f5',
+    borderRadius: '20px',
+    padding: '0 10px'
+  }
 });
 
 const SearchInput = styled(InputBase)({
@@ -126,6 +173,10 @@ const SearchInput = styled(InputBase)({
   transition: 'border-color 0.3s ease',
   '& .MuiInputBase-input': {
     padding: '0'
+  },
+  '@media (max-width: 768px)': {
+    padding: '8px 0',
+    fontSize: '13px'
   }
 });
 
@@ -143,6 +194,12 @@ const SearchBtn = styled(Button)({
   height: '40px',
   '&:hover': {
     backgroundColor: '#e65c00'
+  },
+  '@media (max-width: 768px)': {
+    borderRadius: '20px',
+    padding: '0 12px',
+    height: '36px',
+    minWidth: '36px'
   }
 });
 
@@ -153,7 +210,7 @@ const HeaderIcons = styled(Box)({
   marginRight: '15px',
   position: 'relative',
   '@media (max-width: 768px)': {
-    marginLeft: 'auto'
+    display: 'none'
   }
 });
 
@@ -161,7 +218,13 @@ const HeaderIconButton = styled(IconButton)({
   color: '#FFFFFF !important',
   fontSize: '20px',
   display: 'flex',
-  alignItems: 'center'
+  alignItems: 'center',
+  '@media (max-width: 480px)': {
+    padding: '4px',
+    '& svg': {
+      fontSize: '20px'
+    }
+  }
 });
 
 const PostBtn = styled(Button)({
@@ -178,8 +241,45 @@ const PostBtn = styled(Button)({
   whiteSpace: 'nowrap',
   border: 'none',
   cursor: 'pointer',
+  '@media (max-width: 768px)': {
+    padding: '4px',
+    minWidth: '36px',
+    width: '36px',
+    height: '36px',
+    borderRadius: '50%',
+    '& .MuiButton-label': {
+      margin: 0
+    }
+  },
   '&:hover': {
     backgroundColor: '#e65c00'
+  }
+});
+
+const MobileMenuButton = styled(IconButton)({
+  display: 'none',
+  color: 'white',
+  '@media (max-width: 768px)': {
+    display: 'block'
+  }
+});
+
+const CloseSearchButton = styled(IconButton)({
+  display: 'none',
+  color: '#666',
+  padding: '4px',
+  '@media (max-width: 768px)': {
+    '&.show': {
+      display: 'flex'
+    }
+  }
+});
+
+const MobileSearchButton = styled(IconButton)({
+  display: 'none',
+  color: 'white',
+  '@media (max-width: 768px)': {
+    display: 'flex'
   }
 });
 
@@ -187,6 +287,8 @@ const HeaderComponent = ({ onSearch, onLocationChange, selectedLocation }) => {
   const [city, setCity] = useState(selectedLocation || '');
   const [searchQuery, setSearchQuery] = useState('');
   const [username, setUsername] = useState('');
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [searchOpen, setSearchOpen] = useState(false);
 
   React.useEffect(() => {
     console.log('Header - selectedLocation changed:', selectedLocation);
@@ -209,18 +311,48 @@ const HeaderComponent = ({ onSearch, onLocationChange, selectedLocation }) => {
     onLocationChange(newCity);
   };
 
+  const toggleMobileMenu = () => {
+    setMobileMenuOpen(!mobileMenuOpen);
+  };
+
+  const toggleSearch = () => {
+    setSearchOpen(!searchOpen);
+  };
+
+  const closeSearch = () => {
+    setSearchOpen(false);
+  };
+
+  const mobileMenuItems = [
+    { text: 'Thông báo', icon: <NotificationsIcon /> },
+    { text: 'Tin nhắn', icon: <MessageIcon /> },
+    { text: 'Giỏ hàng', icon: <ShoppingCartIcon /> },
+    { text: 'Quản lý đơn hàng', icon: <ShoppingCartIcon /> },
+    { text: 'Đơn đã thuê', icon: <ShoppingCartIcon /> },
+    { text: 'Bài đăng', icon: <LocalOfferIcon /> },
+    { text: 'Cài đặt tài khoản', icon: <SettingsIcon /> },
+    { text: 'Trợ giúp', icon: <HelpIcon /> },
+    { text: 'Đăng xuất', icon: <LogoutIcon /> }
+  ];
+
   return (
     <StyledAppBar position="static">
       <MainToolbar disableGutters>
-        {/* Logo */}
-        <Logo>
-          <Link to="/" onClick={() => window.location.href = '/'} style={{textDecoration: 'none', cursor: 'pointer', color: 'inherit', padding: '0'}}>
-            <img src={slogan} alt="Thuê rẻ" />   
-          </Link>
-        </Logo>
+        {/* Left Section */}
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+          <MobileMenuButton onClick={toggleMobileMenu}>
+            <MenuIcon />
+          </MobileMenuButton>
+
+          <Logo>
+            <Link to="/" onClick={() => window.location.href = '/'} style={{textDecoration: 'none', cursor: 'pointer', color: 'inherit', padding: '0'}}>
+              <img src={slogan} alt="Thuê rẻ" />   
+            </Link>
+          </Logo>
+        </Box>
 
         {/* Search Container */}
-        <SearchContainer>
+        <SearchContainer className={searchOpen ? 'show' : ''}>
           <LocationDropdown
             value={city}
             onChange={handleLocationChange}
@@ -300,141 +432,127 @@ const HeaderComponent = ({ onSearch, onLocationChange, selectedLocation }) => {
               onKeyPress={(e) => {
                 if (e.key === 'Enter') {
                   handleSearch(e);
+                  closeSearch();
                 }
               }}
               inputProps={{ 'aria-label': 'search' }}
             />
           </SearchBox>
 
-          <SearchBtn onClick={handleSearch}>
+          <SearchBtn onClick={(e) => {
+            handleSearch(e);
+            closeSearch();
+          }}>
             <SearchIcon />
           </SearchBtn>
         </SearchContainer>
 
-        {/* Header Icons */}
-        <HeaderIcons>
-          <HeaderIconButton
+        {/* Right Section */}
+        <RightSection>
+          {/* Mobile Search Button - Chỉ hiển thị khi search chưa mở */}
+          {!searchOpen && (
+            <MobileSearchButton onClick={toggleSearch}>
+              <SearchIcon />
+            </MobileSearchButton>
+          )}
+
+          {/* Close Search Button - Chỉ hiển thị khi search đang mở */}
+          {searchOpen && (
+            <CloseSearchButton onClick={closeSearch} className="show">
+              <CloseIcon sx={{ color: 'white'}}/>
+            </CloseSearchButton>
+          )}
+
+          <PostBtn 
+            variant="contained"
             onClick={() => {
               if (!tokenService.getToken()) {
                 window.location.href = '/login';
                 return;
+              }else{
+                window.location.href = '/post';
               }
             }}
           >
-            <NotificationsIcon sx={{ fontSize: 18 }} />
-          </HeaderIconButton>
-          <HeaderIconButton
-            onClick={() => {
-              if (!tokenService.getToken()) {
-                window.location.href = '/login';
-                return;
-              }
-            }}
-          >
-            <MessageIcon sx={{ fontSize: 18 }} />
-          </HeaderIconButton>
-          <HeaderIconButton
-            onClick={() => {
-              if (!tokenService.getToken()) {
-                window.location.href = '/login';
-                return;
-              }
-            }}
-          >
-            <ShoppingCartIcon sx={{ fontSize: 18 }} />
-          </HeaderIconButton>
-          <HeaderIconButton
-            onClick={() => {
-              const token = localStorage.getItem('token');
-              if (!token) {
-                window.location.href = '/login';
-                return;
-              }
-            }}
-            sx={{
-              position: 'relative',
-              '&:hover .user-menu': {
-                display: tokenService.getToken() ? 'block' : 'none'
-              }
-            }}
-          >
-            <PersonIcon sx={{ fontSize: 18 }} />
-            {tokenService.getToken() && (
-              <Box
-                className="user-menu"
-                sx={{
-                  display: 'none',
-                  position: 'absolute',
-                  top: '100%',
-                  right: 0,
-                  backgroundColor: 'white',
-                  boxShadow: '0 2px 10px rgba(0,0,0,0.1)',
-                  borderRadius: '8px',
-                  padding: '16px',
-                  width: '200px',
-                  color: '#555555',
-                  zIndex: 1000
-                }}
-              >
-                <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
-                  <Box sx={{ mr: 1 }}>
-                    <img 
-                      src={avatar}
-                      style={{
-                        width: 40,
-                        height: 40,
-                        borderRadius: '50%'
-                      }}
-                      alt="User"
-                    />
-                  </Box>
-                  <Box>
-                    <Box sx={{ fontWeight: 'bold', color: '#000', fontSize: '14px' }}>
-                      <Link to="/my-profile" onClick={() => {
-                        window.location.href = '/my-profile';
-                      }} style={{textDecoration: 'none', color: 'inherit'}}>
-                        {username ? username : 'Người dùng'}
-                      </Link>
-                    </Box>
-                    <Box sx={{ fontSize: '11px', color: '#777' }}>0.0 ⭐⭐⭐⭐⭐</Box>
-                    <Box sx={{ fontSize: '11px', color: '#777' }}>Chưa có đánh giá</Box>
-                  </Box>
+            <AddIcon sx={{ fontSize: 20 }} />
+            <Box sx={{ display: { xs: 'none', sm: 'block' } }}>Đăng tin</Box>
+          </PostBtn>
+        </RightSection>
+      </MainToolbar>
+
+      {/* Mobile Menu Drawer */}
+      <Drawer
+        anchor="left"
+        open={mobileMenuOpen}
+        onClose={toggleMobileMenu}
+      >
+        <Box sx={{ width: 280, pt: 2 }}>
+          {tokenService.getToken() ? (
+            <Box sx={{ p: 2, borderBottom: '1px solid #eee' }}>
+              <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
+                <Box sx={{ mr: 2 }}>
+                  <img 
+                    src={avatar}
+                    style={{
+                      width: 40,
+                      height: 40,
+                      borderRadius: '50%'
+                    }}
+                    alt="User"
+                  />
                 </Box>
-                
-                <Box component="ul" sx={{ listStyle: 'none', p: 0, m: 0 }}>
-                  <MenuItem sx={{ fontSize: '13px' }}><ShoppingCartIcon sx={{mr: 1, fontSize: 16}} /> Quản lý đơn hàng</MenuItem>
-                  <MenuItem sx={{ fontSize: '13px' }}><ShoppingCartIcon sx={{mr: 1, fontSize: 16}} /> Đơn đã thuê</MenuItem>
-                  <MenuItem sx={{ fontSize: '13px' }}><LocalOfferIcon sx={{mr: 1, fontSize: 16}} /> Bài đăng</MenuItem>
-                  {/* <MenuItem sx={{ fontSize: '13px' }}><FavoriteIcon sx={{mr: 1, fontSize: 16}} /> Tin đăng đã lưu</MenuItem>
-                  <MenuItem sx={{ fontSize: '13px' }}><SavedSearchIcon sx={{mr: 1, fontSize: 16}} /> Tìm kiếm đã lưu</MenuItem> */}
-                  <MenuItem sx={{ fontSize: '13px' }}><SettingsIcon sx={{mr: 1, fontSize: 16}} /> Cài đặt tài khoản</MenuItem>
-                  <MenuItem sx={{ fontSize: '13px' }}><HelpIcon sx={{mr: 1, fontSize: 16}} /> Trợ giúp</MenuItem>
-                  <MenuItem sx={{ fontSize: '13px' }}><LogoutIcon sx={{mr: 1, fontSize: 16}} /> <Link style={{textDecoration: 'none', color: 'inherit'}} to="/login" onClick={() => {
-                    tokenService.removeToken();
-                    window.location.href = '/login';
-                  }}>Đăng xuất</Link></MenuItem>
+                <Box>
+                  <Box sx={{ fontWeight: 'bold' }}>{username || 'Người dùng'}</Box>
+                  <Box sx={{ fontSize: '12px', color: '#777' }}>0.0 ⭐⭐⭐⭐⭐</Box>
                 </Box>
               </Box>
-            )}
-          </HeaderIconButton>
-        </HeaderIcons>
+            </Box>
+          ) : (
+            <Box sx={{ p: 2, borderBottom: '1px solid #eee' }}>
+              <Button 
+                variant="contained" 
+                fullWidth 
+                onClick={() => {
+                  window.location.href = '/login';
+                }}
+              >
+                Đăng nhập
+              </Button>
+            </Box>
+          )}
 
-        {/* Post Button */}
-        <PostBtn 
-          variant="contained"
-          onClick={() => {
-            if (!tokenService.getToken()) {
-              window.location.href = '/login';
-              return;
-            }else{
-              window.location.href = '/post';
-            }
-          }}
-        >
-          <AddIcon sx={{ fontSize: 20 }} />
-          Đăng tin
-        </PostBtn>
-      </MainToolbar>
+          <List>
+            {mobileMenuItems.map((item, index) => (
+              <ListItem 
+                button 
+                key={index}
+                onClick={() => {
+                  if (item.text === 'Đăng xuất') {
+                    tokenService.removeToken();
+                    window.location.href = '/login';
+                  }
+                  toggleMobileMenu();
+                }}
+                sx={{
+                  py: 1.5,
+                  '&:hover': {
+                    backgroundColor: '#f5f5f5'
+                  }
+                }}
+              >
+                <ListItemIcon sx={{ minWidth: 40 }}>{item.icon}</ListItemIcon>
+                <ListItemText 
+                  primary={item.text} 
+                  primaryTypographyProps={{
+                    fontSize: '14px',
+                    fontWeight: 500
+                  }}
+                />
+              </ListItem>
+            ))}
+          </List>
+        </Box>
+      </Drawer>
     </StyledAppBar>
   );
 };
