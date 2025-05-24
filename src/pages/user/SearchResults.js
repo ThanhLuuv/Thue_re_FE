@@ -1,12 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation, Link } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
 import { Range } from 'react-range';
 import 'react-toastify/dist/ReactToastify.css';
 import apiService from '../../services/apiService';
 import { useErrorHandler } from '../../services/errorService';
 import Header from '../../components/Header';
-import { Link, useLocation } from 'react-router-dom';
 import images from '../../assets/img/img.png';
 import empty from '../../assets/img/empty.png';
 import styles from './SearchResults.module.css';
@@ -20,195 +19,119 @@ const SearchResults = () => {
   const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(0);
   const [imageErrors, setImageErrors] = useState({});
   const [categories, setCategories] = useState([]);
   const [loadingCategories, setLoadingCategories] = useState(true);
-  const [searchParams, setSearchParams] = useState({
-    query: '',
-    location: '',
-    category: '',
-    lowprice: '',
-    highprice: ''
-  });
   const [openPriceModal, setOpenPriceModal] = useState(false);
   const [tempPriceRange, setTempPriceRange] = useState([0, 10000000]);
-  
+
   const { handleApiError } = useErrorHandler();
-  const urlQuery = useQuery();
   const location = useLocation();
+  const urlQuery = useQuery();
   const navigate = useNavigate();
 
   // Fetch categories
-  const fetchCategories = async () => {
-    try {
-      setLoadingCategories(true);
-      const response = await apiService.getCategories();
-      if (response.success) {
-        setCategories(response.data || []);
-      } else {
-        const errorResult = handleApiError(response);
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        setLoadingCategories(true);
+        const response = await apiService.getCategories();
+        if (response.success) {
+          setCategories(response.data || []);
+        } else {
+          const errorResult = handleApiError(response);
+          setError(errorResult);
+          setCategories([]);
+        }
+      } catch (err) {
+        const errorResult = handleApiError(err);
         setError(errorResult);
         setCategories([]);
+      } finally {
+        setLoadingCategories(false);
       }
-    } catch (err) {
-      const errorResult = handleApiError(err);
-      setError(errorResult);
-      setCategories([]);
-    } finally {
-      setLoadingCategories(false);
-    }
-  };
-
-  useEffect(() => {
+    };
     fetchCategories();
   }, []);
 
-  // Lấy tham số từ URL và thiết lập searchParams khi component được tải hoặc URL thay đổi
+  // Always fetch items using params from URL
   useEffect(() => {
-    const queryFromUrl = urlQuery.get('q') || '';
-    const selectedCategory = urlQuery.get('category') || '';
-    const locationFromUrl = urlQuery.get('location') || '';
-    const lowpriceFromUrl = urlQuery.get('lowprice') || '';
-    const highpriceFromUrl = urlQuery.get('highprice') || '';
-    
-    const newParams = {
-      query: queryFromUrl,
-      location: locationFromUrl,
-      category: selectedCategory,
-      lowprice: lowpriceFromUrl,
-      highprice: highpriceFromUrl
-    };
-    
-    console.log('Initial URL params:', newParams);
-    setSearchParams(newParams);
-    setPage(1);
+    const query = urlQuery.get('q') || '';
+    const category = urlQuery.get('category') || '';
+    const province = urlQuery.get('location') || '';
+    const lowprice = urlQuery.get('lowprice') || '';
+    const highprice = urlQuery.get('highprice') || '';
+    const page = parseInt(urlQuery.get('page') || '1', 10);
 
-    // Gọi API ngay lập tức với các tham số từ URL
-    const fetchInitialItems = async () => {
-      try {
-        setLoading(true);
-        setError(null);
-        
-        const response = await apiService.getAvailableItems(
-          queryFromUrl,
-          locationFromUrl,
-          selectedCategory,
-          1,
-          lowpriceFromUrl,
-          highpriceFromUrl
-        );
-        
-        if (response.success) {
-          setItems(response.data);
-          const calculatedTotalPages = Math.max(1, response.pagination?.totalPages || 1);
-          setTotalPages(calculatedTotalPages);
-        } else {
-          const errorResult = handleApiError(response);
-          setError(errorResult);
-        }
-      } catch (err) {
-        const errorResult = handleApiError(err);
-        setError(errorResult);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchInitialItems();
-  }, [location.search]); // Thêm dependency location.search để theo dõi khi URL thay đổi
-
-  // Fetch items khi searchParams hoặc page thay đổi (trừ lần đầu tiên)
-  useEffect(() => {
     const fetchItems = async () => {
-      try {
-        setLoading(true);
-        setError(null);
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-        
-        const { query, location, category, lowprice, highprice } = searchParams;
-        console.log('SearchResults - fetching items with params:', { query, location, category, lowprice, highprice });
-        
-        const response = await apiService.getAvailableItems(
-          query,
-          location,
-          category,
-          page,
-          lowprice,
-          highprice
-        );
-        
-        if (response.success) {
-          setItems(response.data);
-          const calculatedTotalPages = Math.max(1, response.pagination?.totalPages || 1);
-          setTotalPages(calculatedTotalPages);
-          
-          if (page > calculatedTotalPages) {
-            setPage(1);
-          }
-        } else {
-          const errorResult = handleApiError(response);
-          setError(errorResult);
-        }
-      } catch (err) {
-        const errorResult = handleApiError(err);
-        setError(errorResult);
-      } finally {
-        setLoading(false);
+      setLoading(true);
+      setError(null);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      const response = await apiService.getAvailableItems(
+        query,
+        province,
+        category,
+        page,
+        lowprice,
+        highprice
+      );
+      if (response.success) {
+        setItems(response.data);
+        setTotalPages(Math.max(1, response.pagination?.totalPages || 1));
+      } else {
+        setError(response.error);
       }
+      setLoading(false);
     };
-
-    // Gọi fetchItems khi searchParams hoặc page thay đổi
     fetchItems();
-  }, [searchParams, page, handleApiError]);
+  }, [location.search]);
 
-  const handleHeaderLocationChange = (location) => {
-    console.log('SearchResults - handleHeaderLocationChange:', location);
-    // Reset location and update search params
-    const newParams = {
-      ...searchParams,
-      location: location
-    };
-    console.log('SearchResults - new search params:', newParams);
-    setSearchParams(newParams);
-    setPage(1);
-    updateURLParams(newParams);
-  };
-
-  const handleHeaderSearch = (query) => {
-    const newParams = { ...searchParams, query };
-    setSearchParams(newParams);
-    setPage(1);
-    updateURLParams(newParams);
-  };
-
-  const handleHeaderCategoryChange = (category) => {
-    const newParams = { ...searchParams, category };
-    setSearchParams(newParams);
-    setPage(1);
-    updateURLParams(newParams);
-  };
-
-  // Hàm cập nhật URL params mà không reload trang
+  // Update URL params for filter/search/pagination
   const updateURLParams = (params) => {
-    const currentParams = new URLSearchParams();
-    
-    // Thêm các tham số có giá trị vào URL
+    const currentParams = new URLSearchParams(location.search);
     Object.entries(params).forEach(([key, value]) => {
       if (value !== undefined && value !== null && value !== '') {
         currentParams.set(key, value);
+      } else {
+        currentParams.delete(key);
       }
     });
-    
-    // Cập nhật URL mà không reload trang
-    const newUrl = `${window.location.pathname}?${currentParams.toString()}`;
-    console.log('SearchResults - updating URL:', newUrl);
-    window.history.pushState({ path: newUrl }, '', newUrl);
+    navigate(`${location.pathname}?${currentParams.toString()}`);
   };
 
+  // Header handlers
+  const handleHeaderLocationChange = (loc) => {
+    updateURLParams({ location: loc, page: 1 });
+  };
+  const handleHeaderSearch = (query) => {
+    updateURLParams({ q: query, page: 1 });
+  };
+  const handleHeaderCategoryChange = (category) => {
+    updateURLParams({ category, page: 1 });
+  };
+
+  // Pagination
   const handlePageChange = (newPage) => {
-    setPage(newPage);
+    updateURLParams({ page: newPage });
+  };
+
+  // Price modal logic
+  const handleOpenPriceModal = () => {
+    const lowPrice = urlQuery.get('lowprice') ? Number(urlQuery.get('lowprice')) : 0;
+    const highPrice = urlQuery.get('highprice') ? Number(urlQuery.get('highprice')) : 10000000;
+    setTempPriceRange([lowPrice, highPrice]);
+    setOpenPriceModal(true);
+  };
+  const handleClosePriceModal = () => setOpenPriceModal(false);
+  const handleApplyPriceFilter = () => {
+    updateURLParams({ lowprice: tempPriceRange[0], highprice: tempPriceRange[1], page: 1 });
+    setOpenPriceModal(false);
+  };
+  const handleResetPriceFilter = () => {
+    updateURLParams({ lowprice: '', highprice: '', page: 1 });
+    setTempPriceRange([0, 10000000]);
+    setOpenPriceModal(false);
   };
 
   const handleImageError = (itemId) => {
@@ -218,53 +141,20 @@ const SearchResults = () => {
     });
   };
 
-  const handleOpenPriceModal = () => {
-    // Thiết lập giá trị ban đầu dựa trên searchParams hiện tại
-    const lowPrice = searchParams.lowprice ? Number(searchParams.lowprice) : 0;
-    const highPrice = searchParams.highprice ? Number(searchParams.highprice) : 10000000;
-    setTempPriceRange([lowPrice, highPrice]);
-    setOpenPriceModal(true);
-  };
-
-  const handleClosePriceModal = () => {
-    setOpenPriceModal(false);
-  };
-
-  const handleApplyPriceFilter = () => {
-    const newParams = {
-      ...searchParams,
-      lowprice: tempPriceRange[0].toString(),
-      highprice: tempPriceRange[1].toString()
-    };
-    setSearchParams(newParams);
-    setPage(1);
-    setOpenPriceModal(false);
-    
-    // Cập nhật URL khi áp dụng bộ lọc giá
-    updateURLParams(newParams);
-  };
-
-  const handleResetPriceFilter = () => {
-    const newParams = {
-      ...searchParams,
-      lowprice: '',
-      highprice: ''
-    };
-    setTempPriceRange([0, 10000000]);
-    setSearchParams(newParams);
-    setPage(1);
-    setOpenPriceModal(false);
-    
-    // Xóa các tham số giá trong URL
-    updateURLParams(newParams);
-  };
-
   const formatPrice = (price) => {
     if (price >= 1000000) {
       return `${price/1000000} triệu`;
     }
     return `${price.toLocaleString()} đ`;
   };
+
+  // Get current filter values for UI
+  const currentCategory = urlQuery.get('category') || '';
+  const currentLocation = urlQuery.get('location') || '';
+  const currentQuery = urlQuery.get('q') || '';
+  const currentLowPrice = urlQuery.get('lowprice') || '';
+  const currentHighPrice = urlQuery.get('highprice') || '';
+  const currentPage = parseInt(urlQuery.get('page') || '1', 10);
 
   return (
     <div className={styles.styledBox}>
@@ -306,25 +196,24 @@ const SearchResults = () => {
           height: '100%'
         }}
       />
-      <Header 
+      <Header
         onSearch={handleHeaderSearch}
         onLocationChange={handleHeaderLocationChange}
-        selectedLocation={searchParams.location}
-        initialQuery={searchParams.query}
+        selectedLocation={currentLocation}
+        initialQuery={currentQuery}
       />
-      
       <div className={styles.filterSection}>
         <div className={styles.filterContent}>
           <div className={styles.filterGroup}>
             <span className={styles.filterLabel}>Danh mục</span>
-            <select 
-              value={searchParams.category || ''}
+            <select
+              value={currentCategory}
               onChange={(e) => handleHeaderCategoryChange(e.target.value)}
               className={styles.filterSelect}
             >
-              <option value="">Tất cả</option>
+              <option key="all" value="">Tất cả</option>
               {loadingCategories ? (
-                <option disabled>Đang tải...</option>
+                <option key="loading" disabled>Đang tải...</option>
               ) : categories && categories.length > 0 ? (
                 categories.map((category) => (
                   <option key={category.id} value={category.category_name}>
@@ -332,21 +221,19 @@ const SearchResults = () => {
                   </option>
                 ))
               ) : (
-                <option disabled>Không có danh mục</option>
+                <option key="no-categories" disabled>Không có danh mục</option>
               )}
             </select>
           </div>
-
           <div className={styles.filterGroup}>
             <span className={styles.filterLabel} onClick={handleOpenPriceModal}>Giá</span>
             <span className={styles.filterDropdown} onClick={handleOpenPriceModal}>▼</span>
-            {(searchParams.lowprice || searchParams.highprice) && (
+            {(currentLowPrice || currentHighPrice) && (
               <span className={styles.filterActiveIndicator}>●</span>
             )}
           </div>
         </div>
       </div>
-
       {openPriceModal && (
         <div className={styles.modal}>
           <div className={styles.modalContent}>
@@ -433,7 +320,6 @@ const SearchResults = () => {
           </div>
         </div>
       )}
-
       <div className={styles.productsSection}>
         {loading ? (
           <div className={styles.loading}>
@@ -449,7 +335,7 @@ const SearchResults = () => {
             {items.map((item) => (
               <Link key={item.item_id} to={`/product/${item.item_id}`} className={styles.productCard}>
                 <div className={styles.productImage}>
-                  <img 
+                  <img
                     src={imageErrors[item.item_id] ? images : (item.images?.find(img => img.is_primary)?.image_url || images)}
                     alt={item.item_name}
                     onError={() => handleImageError(item.item_id)}
@@ -469,20 +355,19 @@ const SearchResults = () => {
           </div>
         )}
       </div>
-
       {totalPages > 1 && items.length > 0 && (
         <div className={styles.pagination}>
           <button
             className={`${styles.pageButton} ${styles.iconButton}`}
-            disabled={page === 1}
-            onClick={() => handlePageChange(page - 1)}
+            disabled={currentPage === 1}
+            onClick={() => handlePageChange(currentPage - 1)}
           >
             <span className="material-icons">chevron_left</span>
           </button>
           {Array.from({ length: totalPages }, (_, i) => i + 1).map((p) => (
             <button
               key={p}
-              className={`${styles.pageButton} ${styles.pageNumber} ${p === page ? styles.pageNumberActive : ''}`}
+              className={`${styles.pageButton} ${styles.pageNumber} ${p === currentPage ? styles.pageNumberActive : ''}`}
               onClick={() => handlePageChange(p)}
             >
               {p}
@@ -490,8 +375,8 @@ const SearchResults = () => {
           ))}
           <button
             className={`${styles.pageButton} ${styles.iconButton}`}
-            disabled={page === totalPages}
-            onClick={() => handlePageChange(page + 1)}
+            disabled={currentPage === totalPages}
+            onClick={() => handlePageChange(currentPage + 1)}
           >
             <span className="material-icons">chevron_right</span>
           </button>

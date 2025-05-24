@@ -14,7 +14,9 @@ import {
   ListItem,
   ListItemIcon,
   ListItemText,
-  Collapse
+  Collapse,
+  Menu,
+  Avatar
 } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import SearchIcon from '@mui/icons-material/Search';
@@ -241,7 +243,7 @@ const PostBtn = styled(Button)({
   whiteSpace: 'nowrap',
   border: 'none',
   cursor: 'pointer',
-  '@media (max-width: 768px)': {
+  '@media (max-width: 480px)': {
     padding: '4px',
     minWidth: '36px',
     width: '36px',
@@ -289,6 +291,7 @@ const HeaderComponent = ({ onSearch, onLocationChange, selectedLocation }) => {
   const [username, setUsername] = useState('');
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
+  const [userMenuAnchor, setUserMenuAnchor] = useState(null);
 
   React.useEffect(() => {
     console.log('Header - selectedLocation changed:', selectedLocation);
@@ -323,13 +326,28 @@ const HeaderComponent = ({ onSearch, onLocationChange, selectedLocation }) => {
     setSearchOpen(false);
   };
 
+  const handleUserMenuOpen = (event) => {
+    setUserMenuAnchor(event.currentTarget);
+  };
+
+  const handleUserMenuClose = () => {
+    setUserMenuAnchor(null);
+  };
+
+  const userMenuItems = [
+    { text: 'Quản lý đơn hàng', icon: <ShoppingCartIcon /> },
+    { text: 'Đơn đã thuê', icon: <ShoppingCartIcon /> },
+    { text: 'Cài đặt tài khoản', icon: <SettingsIcon /> },
+    { text: 'Trợ giúp', icon: <HelpIcon /> },
+    { text: 'Đăng xuất', icon: <LogoutIcon /> }
+  ];
+
   const mobileMenuItems = [
     { text: 'Thông báo', icon: <NotificationsIcon /> },
     { text: 'Tin nhắn', icon: <MessageIcon /> },
     { text: 'Giỏ hàng', icon: <ShoppingCartIcon /> },
     { text: 'Quản lý đơn hàng', icon: <ShoppingCartIcon /> },
     { text: 'Đơn đã thuê', icon: <ShoppingCartIcon /> },
-    { text: 'Bài đăng', icon: <LocalOfferIcon /> },
     { text: 'Cài đặt tài khoản', icon: <SettingsIcon /> },
     { text: 'Trợ giúp', icon: <HelpIcon /> },
     { text: 'Đăng xuất', icon: <LogoutIcon /> }
@@ -461,6 +479,121 @@ const HeaderComponent = ({ onSearch, onLocationChange, selectedLocation }) => {
             <CloseSearchButton onClick={closeSearch} className="show">
               <CloseIcon sx={{ color: 'white'}}/>
             </CloseSearchButton>
+          )}
+
+          {/* Desktop Icons - Only show on laptop screens */}
+          <Box sx={{ display: { xs: 'none', md: 'flex' }, gap: '8px', mr: 2 }}>
+            <IconButton color="inherit" sx={{ padding: '4px' }}>
+              <NotificationsIcon sx={{ fontSize: '20px' }} />
+            </IconButton>
+            <IconButton color="inherit" sx={{ padding: '4px' }}>
+              <MessageIcon sx={{ fontSize: '20px' }} />
+            </IconButton>
+            <IconButton color="inherit" sx={{ padding: '4px' }}>
+              <ShoppingCartIcon sx={{ fontSize: '20px' }} />
+            </IconButton>
+          </Box>
+
+          {/* User Menu */}
+          {tokenService.getToken() ? (
+            <>
+              <IconButton
+                onClick={handleUserMenuOpen}
+                sx={{ 
+                  display: { xs: 'none', md: 'flex' },
+                  padding: '4px'
+                }}
+              >
+                <Avatar
+                  src={avatar}
+                  sx={{ width: 28, height: 28 }}
+                />
+              </IconButton>
+              <Menu
+                anchorEl={userMenuAnchor}
+                open={Boolean(userMenuAnchor)}
+                onClose={handleUserMenuClose}
+                anchorOrigin={{
+                  vertical: 'bottom',
+                  horizontal: 'right',
+                }}
+                transformOrigin={{
+                  vertical: 'top',
+                  horizontal: 'right',
+                }}
+                disableScrollLock
+                PaperProps={{
+                  sx: { 
+                    width: 220,
+                    mt: 0.5,
+                    '& .MuiMenuItem-root': {
+                      py: 1
+                    },
+                    '& .MuiListItemIcon-root': {
+                      minWidth: 36
+                    }
+                  }
+                }}
+              >
+                <Box sx={{ p: 1.5, borderBottom: '1px solid #eee' }}>
+                  <Box sx={{ display: 'flex', alignItems: 'center', mb: 1.5 }}>
+                    <Box sx={{ mr: 1.5 }}>
+                      <Avatar
+                        src={avatar}
+                        sx={{ width: 36, height: 36 }}
+                      />
+                    </Box>
+                    <Box>
+                      <Box sx={{ fontWeight: 'bold', fontSize: '14px' }}> 
+                        <Link to="/my-profile" onClick={() => {
+                          window.location.href = '/my-profile';
+                          handleUserMenuClose();
+                        }} style={{textDecoration: 'none', color: 'inherit', marginLeft: '5px'}}>
+                          {username || 'Người dùng'}
+                        </Link>
+                      </Box>
+                      <Box sx={{ fontSize: '11px', color: '#777' }}>0.0 ⭐⭐⭐⭐⭐</Box>
+                    </Box>
+                  </Box>
+                </Box>
+                {userMenuItems.map((item, index) => (
+                  <MenuItem
+                    key={index}
+                    onClick={() => {
+                      if (item.text === 'Đăng xuất') {
+                        tokenService.removeToken();
+                        window.location.href = '/login';
+                      }
+                      handleUserMenuClose();
+                    }}
+                    sx={{
+                      '&:hover': {
+                        backgroundColor: '#f5f5f5'
+                      }
+                    }}
+                  >
+                    <ListItemIcon sx={{ minWidth: 36 }}>{item.icon}</ListItemIcon>
+                    <ListItemText 
+                      primary={item.text} 
+                      primaryTypographyProps={{
+                        fontSize: '13px',
+                        fontWeight: 500
+                      }}
+                    />
+                  </MenuItem>
+                ))}
+              </Menu>
+            </>
+          ) : (
+            <Button
+              variant="contained"
+              onClick={() => {
+                window.location.href = '/login';
+              }}
+              sx={{ display: { xs: 'none', md: 'block' } }}
+            >
+              Đăng nhập
+            </Button>
           )}
 
           <PostBtn 

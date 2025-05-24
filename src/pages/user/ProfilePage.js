@@ -23,6 +23,7 @@ const ProfilePage = () => {
   const [editAvatar, setEditAvatar] = useState(null);
   const [editAvatarPreview, setEditAvatarPreview] = useState(null);
   const [editLoading, setEditLoading] = useState(false);
+  const [nameEditLoading, setNameEditLoading] = useState(false);
   const navigate = useNavigate();
   const { setPostData, clearPostData } = useEditPost();
   const { user, fetchUserInfo } = useAuth();
@@ -132,10 +133,12 @@ const ProfilePage = () => {
             throw new Error(errorData.error?.message || 'Upload failed');
           }
           const data = await response.json();
+          console.log("data", data);
           const avatarUrl = data.secure_url;
+          console.log("avatarUrl", avatarUrl);
 
           // Cập nhật avatar
-          const result = await apiService.updateAvatar({ avatar: avatarUrl });
+          const result = await apiService.updateAvatar({ image_url: avatarUrl });
           console.log("result", result);
           if (result.success) {
             toast.success('Cập nhật ảnh đại diện thành công!');
@@ -170,7 +173,7 @@ const ProfilePage = () => {
       return;
     }
     try {
-      setEditLoading(true);
+      setNameEditLoading(true);
       const result = await apiService.updateName({ full_name: editNameValue });
       if (result.success) {
         toast.success('Cập nhật tên thành công!');
@@ -182,7 +185,7 @@ const ProfilePage = () => {
     } catch (error) {
       toast.error('Có lỗi xảy ra khi cập nhật tên');
     } finally {
-      setEditLoading(false);
+      setNameEditLoading(false);
     }
   };
 
@@ -237,8 +240,13 @@ const ProfilePage = () => {
   };
 
   // Thông tin xác thực (giả lập)
-  const joined = userInfo?.createdAt ? userInfo.createdAt : '3 năm 2 tháng';
-
+  console.log("userInfo", userInfo);
+  let joined = '3 năm 2 tháng';
+  if(userInfo?.created_at) {
+    const createdAt = new Date(userInfo.created_at);
+    joined = createdAt.toLocaleDateString('vi-VN', { year: 'numeric', month: 'long' });
+  }
+  
   function mapPostToInitialData(post) {
     if (!post) return null;
     return {
@@ -313,8 +321,8 @@ const ProfilePage = () => {
       <Header onSearch={handleHeaderSearch} onLocationChange={handleHeaderLocationChange} />
       <div className={styles.profileSidebar}>
         <div className={styles.avatarWrapper}>
-          {userInfo?.avatar ? (
-            <img className={styles.avatar} src={userInfo.avatar} alt="avatar" />
+          {userInfo?.image?.image_url ? (
+            <img className={styles.avatar} src={userInfo.image.image_url} alt="avatar" />
           ) : (
             <span className={styles.avatarIcon}><i className="material-icons">account_circle</i></span>
           )}
@@ -360,7 +368,7 @@ const ProfilePage = () => {
                 className={styles.iconBtn} 
                 title="Hủy" 
                 onClick={handleCancelEdit}
-                disabled={editLoading}
+                disabled={nameEditLoading}
               >
                 <i className="material-icons">close</i>
               </button>
@@ -368,9 +376,9 @@ const ProfilePage = () => {
                 className={styles.iconBtn} 
                 title="Lưu thay đổi" 
                 onClick={handleEditProfile}
-                disabled={editLoading}
+                disabled={nameEditLoading}
               >
-                {editLoading ? (
+                {nameEditLoading ? (
                   <span className={styles.spinner}></span>
                 ) : (
                   <i className="material-icons">check</i>
@@ -382,7 +390,7 @@ const ProfilePage = () => {
               className={styles.iconBtn} 
               title="Chỉnh sửa thông tin" 
               onClick={handleEditProfile}
-              disabled={editLoading}
+              disabled={nameEditLoading}
             >
               <i className="material-icons">edit</i>
             </button>
@@ -391,7 +399,7 @@ const ProfilePage = () => {
         <div className={styles.profileMeta}>
           <div><i className="material-icons">chat</i> <span>Phản hồi chat: Chưa có thông tin</span></div>
           <div><i className="material-icons">event</i> <span>Đã tham gia: {joined}</span></div>
-          <div className={styles.verifiedRow}>
+          {/* <div className={styles.verifiedRow}>
             <i className="material-icons">verified_user</i> <span>Đã xác thực:</span>
             <span className={styles.verifiedIcons}>
               <i className="icon-zalo" />
@@ -399,7 +407,7 @@ const ProfilePage = () => {
               <i className="icon-google" />
               <i className="icon-apple" />
             </span>
-          </div>
+          </div> */}
         </div>
         {userError && <div className={styles.userError}>{userError}</div>}
       </div>
